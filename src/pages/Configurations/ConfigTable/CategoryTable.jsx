@@ -9,7 +9,11 @@ import {
     Spinner
   } from "reactstrap"
   import { Link } from 'react-router-dom'
-  import {getCategoriess as onGetCategories,deleteCategory as onDeleteCategory} from "/src/store/actions";
+  import {
+    getCategoriess as onGetCategories,
+    deleteCategory as onDeleteCategory
+  } from "/src/store/actions";
+  
   import { useSelector, useDispatch } from "react-redux";
   import CategoryModel from '../ConfigModel/CategoryModel';
   import DeleteModal from '../../../components/Common/DeleteModal';

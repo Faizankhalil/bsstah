@@ -1,10 +1,31 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import Breadcrumb from '../../components/Common/Breadcrumb';
-import { Card, Col, Row, Table } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Card, Col, Row, Table,Spinner } from 'reactstrap';
+import { Link, useHistory } from 'react-router-dom';
+import {getAuctioneers as onGetAuctioneers} from  "/src/store/actions";
+import { useSelector, useDispatch } from "react-redux";
+import CustomPagination from '../../components/Common/Pagination';
+
+
+
 document.title = "Auctioneer List | Bsstah";
 
 const AuctioneerList = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  // from redux state 
+  const auctioneerList = useSelector(state => state.AuctioneerReducer.auctioneersList)
+  const loading = useSelector(state => state.AuctioneerReducer.loading);
+  const count = useSelector(state => state.AuctioneerReducer.count)
+
+useEffect(() => {
+dispatch(onGetAuctioneers(10,1))
+}, [dispatch])
+
+const getAuctionnerID = (recordId) =>{
+  history.push(`/auctioneer-details/${recordId}`);
+}
+
   return (
     <>
     <div className='page-content'>
@@ -35,7 +56,8 @@ const AuctioneerList = () => {
                         </div>
               </div>
             </Card>
-            <div className="table-responsive">
+            { auctioneerList && count ? (
+              <div className="table-responsive">
               <Table className="table mb-0">
                 <thead className="table-light">
                   <tr>
@@ -50,23 +72,41 @@ const AuctioneerList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                  <th scope="row">1</th>
-                  <td>Admin</td>
-                  <td>12345678</td>
-                  <td>admin@me.com</td>
-                  <td>@admin123</td>
-                  <td>UAE</td>
-                  <td>active</td>
-                  <td>test</td>
-
+                {auctioneerList.map((item)=>(
+                  <tr key={item.id} onClick={()=>{getAuctionnerID(item.id)}}>
+                    <th scope="row">{item.id}</th>
+                    <td>{item.fullName}</td>
+                    <td>{item.phone}</td>
+                    <td>{item.email}</td>
+                    <td>{item.userName}</td>
+                    <td>{item.nationality}</td>
+                    <td>{item.accountStatus}</td>
+                    <td>{item.auctionHouseName}</td>
                   </tr>
+                ))}
                   
                 </tbody>
 
               </Table>
-
+              <CustomPagination arrayCount={count} getNewReord={onGetAuctioneers}/>
             </div>
+
+            ):(
+              <div>
+                   <div className='d-flex justify-content-center align-items-center p-5'>
+                              <Spinner
+                                color="primary"
+                                style={{
+                                  height: '3rem',
+                                  width: '3rem'
+                                }}
+                              >
+                                Loading...
+                              </Spinner>
+                      </div>
+                </div>
+            )}
+            
             </Card>
           </Col>
         </Row>

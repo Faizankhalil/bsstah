@@ -1,5 +1,9 @@
 import {put, call, takeEvery} from "redux-saga/effects";
-import { GET_CATEGORIES_REQUESTED, ADD_CATEGORY_REQUESTED, UPDATE_CATEGORY_REQUESTED, DELETE_CATEGORY_REQUESTED } from "./actionTypes";
+import { 
+  GET_CATEGORIES_REQUESTED, 
+  ADD_CATEGORY_REQUESTED, 
+  UPDATE_CATEGORY_REQUESTED, 
+  DELETE_CATEGORY_REQUESTED } from "./actionTypes";
 import { 
     getCategoriesSuccess,
     getCategoriesFail,

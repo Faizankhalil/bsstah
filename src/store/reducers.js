@@ -43,7 +43,9 @@ import Dashboard from "./dashboard/reducer";
 import DashboardSaas from "./dashboard-saas/reducer";
 
 // categories
-import CategoriesReducer from "./configuration/reducer"
+import CategoriesReducer from "./configuration/reducer";
+// auctioneer
+import AuctioneerReducer from "./auctioneer/reducer"
 
 const rootReducer = combineReducers({
   // public
@@ -63,7 +65,8 @@ const rootReducer = combineReducers({
   contacts,
   Dashboard,
   DashboardSaas,
-  CategoriesReducer
+  CategoriesReducer,
+  AuctioneerReducer
 })
 
 export default rootReducer
