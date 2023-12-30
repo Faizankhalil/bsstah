@@ -21,9 +21,16 @@ import AuctioneerList from "../pages/Auctioneer/AuctioneerList"
 import AuctioneerDetails from "../pages/Auctioneer/AuctioneerDetails"
 import CreateAuctioneer from "../pages/Auctioneer/CreateAuctioneer"
 
+//Auction House
+import AuctionHouseList from "../pages/AuctionHouse/AuctionHouseList"
+import CreateAuctionHouse from "../pages/AuctionHouse/CreateAuctionHouse"
+
 //Config
 import MainConfig from "../pages/Configurations/MainConfig"
 import AuctionConfig from "../pages/Configurations/AuctionConfig"
+import MemberList from "../pages/Member/MemberList"
+
+
 
 
  const authProtectedRoutes = [
@@ -38,6 +45,11 @@ import AuctionConfig from "../pages/Configurations/AuctionConfig"
   {path:"/auctioneer-list",component:AuctioneerList},
   {path:"/auctioneer-details/:id",component:AuctioneerDetails},
   {path:"/create-auctioneer",component:CreateAuctioneer},
+
+  //Auction House
+  {path:"/auction-house-list", component:AuctionHouseList},
+  {path:"/create-auction-house", component:CreateAuctionHouse},
+  {path:"/member", component:MemberList},
 
   //Config
   {path:"/Configuration", component:MainConfig},
