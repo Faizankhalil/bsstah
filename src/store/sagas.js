@@ -18,7 +18,9 @@ import contactsSaga from "./contacts/saga";
 import dashboardSaga from "./dashboard/saga";
 import dashboardSaasSaga from "./dashboard-saas/saga";
 import categoriesSaga from "./configuration/saga";
-import auctioneerSaga from "./auctioneer/saga"
+import auctioneerSaga from "./auctioneer/saga";
+import {watchShowToast} from "./toast/saga";
+import auctionHouseSaga from "./auctionHouse/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -40,6 +42,8 @@ export default function* rootSaga() {
     fork(dashboardSaga),
     fork(dashboardSaasSaga),
     fork(categoriesSaga),
-    fork(auctioneerSaga)
+    fork(auctioneerSaga),
+    fork(watchShowToast),
+    fork(auctionHouseSaga)
   ])
 }

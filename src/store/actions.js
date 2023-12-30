@@ -42,8 +42,12 @@ export * from "./dashboard-saas/actions";
 
 // categories 
 
-export * from "./configuration/actions"
+export * from "./configuration/actions";
 
 // Auctioneer 
 
-export * from "./auctioneer/actions"
+export * from "./auctioneer/actions";
+
+// Auction House
+
+export * from "./auctionHouse/actions"
