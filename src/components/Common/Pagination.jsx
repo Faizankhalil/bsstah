@@ -10,11 +10,13 @@ const CustomPagination = ({arrayCount,getNewReord}) => {
     // eslint-disable-next-line no-unused-vars
     const [totalPage, setTotalPage] = useState(totalPageCount)
     const handlePageClick = page => {
+      console.log(page,"pagenumber")
         if(page > 1){
-            const newOffset = 10 + (page-1);
+            const newOffset = (page-1) * 10;
+            console.log(newOffset,"newOffset")
             dispatch(getNewReord(10,newOffset))
         }else{
-            dispatch(getNewReord(10,1))
+            dispatch(getNewReord(10,0))
         }
       
        setPage(page)
