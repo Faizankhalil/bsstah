@@ -18,7 +18,9 @@ const INIT_STATE = {
     auctioneersList:[],
     statusCode:null,
     auctioneerDetails:{},
-    error:null
+    auctioneer:{},
+    error:null,
+    message:""
 }
 
 const AuctioneerReducer = (state = INIT_STATE, action) =>{
@@ -54,6 +56,22 @@ const AuctioneerReducer = (state = INIT_STATE, action) =>{
                 success:action.payload.success,
                 statusCode:action.payload.statusCode,
                 error:action.payload
+            }
+        case ADD_AUCTIONEER_SUCCESS:
+            return{
+                ...state,
+                success:action.payload.success,
+                statusCode:action.payload.statusCode,
+                auctioneer:action.payload.data,
+                message:action.payload.message
+            }
+        case ADD_AUCTIONEER_FAIL:
+            return{
+                ...state,
+                success:action.payload.success,
+                statusCode:action.payload.statusCode,
+                error:action.payload,
+                message:action.payload.message
             }
         default:
             return state

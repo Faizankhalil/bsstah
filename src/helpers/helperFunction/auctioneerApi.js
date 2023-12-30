@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { auctioneerUrl,auctioneerProfile } from '../../constants/urlEndPoints';
+import { auctioneerUrl,auctioneerProfile,auctioneerCreate } from '../../constants/urlEndPoints';
+import accessToken from '../jwt-token-access/accessToken';
+import { api } from './refreshToken';
+const token = accessToken();
 
 export const fetchAuctioneers = async( params ) => {
     try {
@@ -12,7 +15,7 @@ export const fetchAuctioneers = async( params ) => {
         });
         return response.data;
     } catch (error) {
-        throw error;
+        throw error.response.data;
     }
   }
   export const fetchAuctioneer = async( id ) => {
@@ -25,6 +28,23 @@ export const fetchAuctioneers = async( params ) => {
         });
         return response.data;
     } catch (error) {
-        throw error;
+        throw error.response.data;
     }
+  }
+
+  export const createAuctioneer = async(data)=>{
+    try{
+        const response = await api.post(auctioneerCreate,data,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'accept': 'application/json',
+                'x-lang': 'en'
+            } 
+        });
+        return response.data
+    }
+    catch(error){
+        throw error.response.data;
+    }
+
   }

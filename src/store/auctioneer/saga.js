@@ -10,10 +10,13 @@ import {
     getAuctioneersSuccess,
     getAuctioneersFail,
     getAuctioneerDetailsSuccess,
-    getAuctioneerDetailsFail
+    getAuctioneerDetailsFail,
+    createAuctioneerSuccess,
+    createAuctioneerFail,
 } from "./actions"
+import {showToast} from "../toast/action";
 
-import { fetchAuctioneers,fetchAuctioneer } from "../../helpers/helperFunction/auctioneerApi";
+import { fetchAuctioneers,fetchAuctioneer,createAuctioneer } from "../../helpers/helperFunction/auctioneerApi";
 
 function* onGetAuctioneers(action){
     try{
@@ -41,9 +44,27 @@ function* onGetAuctioneerDetails(action){
 
 }
 
+function* onCreateAuctioneer(action){
+    try{
+         const response = yield call(createAuctioneer,action.payload )
+        yield put(createAuctioneerSuccess(response))
+        console.log(response,"from create auctioneer")
+        const message = response.message || "Auctioneer successfully created"
+        yield put(showToast(message,"success"))
+       
+    }
+    catch(error){
+        yield put(createAuctioneerFail(error))
+        const errorMessage = error?.message || "Failed to create Auctioneer"
+        yield put(showToast(errorMessage,"error"))
+      
+    }
+}
+
 function* auctioneerSaga(){
     yield takeEvery(GET_AUCTIONEERS_REQUESTED,onGetAuctioneers)
     yield takeEvery(GET_AUCTIONEER_DETAILS_REQUESTED,onGetAuctioneerDetails)
+    yield takeEvery(ADD_AUCTIONEER_REQUESTED,onCreateAuctioneer)
 }
 
 export default auctioneerSaga

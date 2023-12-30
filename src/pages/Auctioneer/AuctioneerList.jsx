@@ -19,7 +19,7 @@ const AuctioneerList = () => {
   const count = useSelector(state => state.AuctioneerReducer.count)
 
 useEffect(() => {
-dispatch(onGetAuctioneers(10,1))
+dispatch(onGetAuctioneers(10,0))
 }, [dispatch])
 
 const getAuctionnerID = (recordId) =>{
