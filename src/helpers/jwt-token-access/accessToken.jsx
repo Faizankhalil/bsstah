@@ -2,7 +2,8 @@
   const responseString = localStorage.getItem("authUser");
   if (responseString) {
     const response = JSON.parse(responseString);
-    const token = response.data.data.accessToken
+    const token = response.data.data.accessToken;
+    localStorage.setItem('accessToken', token);
     return token
   } else {
     console.log("not login")
