@@ -73,6 +73,22 @@ const AuctioneerReducer = (state = INIT_STATE, action) =>{
                 error:action.payload,
                 message:action.payload.message
             }
+        case UPDATE_AUCTIONEER_SUCCESS:
+                return{
+                    ...state,
+                    success:action.payload.success,
+                    statusCode:action.payload.statusCode,
+                    auctioneer:action.payload.data,
+                    message:action.payload.message
+                }
+        case UPDATE_AUCTIONEER_FAIL:
+                return{
+                    ...state,
+                    success:action.payload.success,
+                    statusCode:action.payload.statusCode,
+                    error:action.payload,
+                    message:action.payload.message
+                }
         default:
             return state
     }

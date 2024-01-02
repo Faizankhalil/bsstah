@@ -39,13 +39,14 @@ const Login = props => {
     initialValues: {
       email: "",
       password: "",
+      role:"admin"
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: (values) => {
-
+      console.log(values)
        dispatch(loginUser(values, props.history));
     }
   });

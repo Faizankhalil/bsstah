@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { auctioneerUrl,auctioneerProfile,auctioneerCreate } from '../../constants/urlEndPoints';
+import { auctioneerUrl,auctioneerProfile,auctioneerCreate,updateAuctioneerHouseurl } from '../../constants/urlEndPoints';
 import accessToken from '../jwt-token-access/accessToken';
 import { api } from './refreshToken';
 const token = accessToken();
@@ -20,8 +20,9 @@ export const fetchAuctioneers = async( params ) => {
   }
   export const fetchAuctioneer = async( id ) => {
     try {
-        const response = await axios.get(`${auctioneerProfile}/${id}`, {
+        const response = await api.get(`${auctioneerProfile}/${id}`, {
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'accept': 'application/json',
                 'x-lang': 'en'
             }
@@ -47,4 +48,20 @@ export const fetchAuctioneers = async( params ) => {
         throw error.response.data;
     }
 
+  }
+
+  export const updateAuctioneer = async (data) =>{
+    try{
+        const response = await api.put(updateAuctioneerHouseurl,data,{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'accept': 'application/json',
+                'x-lang': 'en'
+            } 
+        });
+        return response.data
+    }
+    catch(error){
+        throw error.response.data
+    }
   }

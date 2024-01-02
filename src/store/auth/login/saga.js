@@ -35,7 +35,8 @@ function* loginUser({ payload: { user, history } }){
   try{
     const data = {
       userName:user.email,
-      password:user.password
+      password:user.password,
+      role:user.role
     }
     const response = yield call(fetchLogin,data);
     localStorage.setItem("authUser", JSON.stringify(response));

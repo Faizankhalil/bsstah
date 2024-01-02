@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { 
     Card,
     Col, 
@@ -15,21 +15,25 @@ import {
     FormFeedback } from 'reactstrap';
     import classnames from "classnames"
 import { Link } from 'react-router-dom';
-import { useFormik } from 'formik'
+import { Field, useFormik } from 'formik'
 import * as Yup from 'yup';
 import {useSelector, useDispatch } from 'react-redux';
 import {
   createAuctioneerRequest as onCreateAuctioneer,
+  updateAuctioneerRequest as onUpdateAuctioneerHouse
 } from "/src/store/actions";
 
 
-const AuctioneerFormWizard = () => {
-  const dispatch = useDispatch();
-  const success = useSelector(state => state.AuctioneerReducer.success)
+const AuctioneerFormWizard = ({auctioneerId}) => {
+    const dispatch = useDispatch();
     const [activeTab, setactiveTab] = useState(1)
-
     const [passedSteps, setPassedSteps] = useState([1])
-
+    const [license, setLicense] = useState(false)
+    const auctioneer = useSelector(state => state.AuctioneerReducer.auctioneerDetails); 
+    // console.log(auctioneer)
+    // console.log(auctioneerId)
+    const isEditing = Boolean(auctioneerId);
+    console.log(isEditing,"isediting")
     const validationSchema = Yup.object().shape({
       fullName: Yup.object().shape({
         en:Yup.string().required("Please Enter Full Name in English"),
@@ -38,10 +42,10 @@ const AuctioneerFormWizard = () => {
       email:Yup.string()
       .email("Must be a valid Email")
       .required("Please Enter Email"),
-      password:Yup.string()
+      password:isEditing ? Yup.string() : Yup.string()
       .min(8, 'Password must be at least 8 characters')
       .required("Please Enter password"),
-      confirmPassword:Yup.string()
+      confirmPassword:isEditing ? Yup.string() :Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required("Please Re-Enter password"),
       phoneNumber:Yup.string().required("Please Enter Phone Number"),
@@ -58,39 +62,57 @@ const AuctioneerFormWizard = () => {
         confirmPassword:"",
         phoneNumber:"",
         countryCode:"+971",
-
       },
       validationSchema:validationSchema,
       onSubmit:(values) => {
         console.log(values)
-        dispatch(onCreateAuctioneer(values))
+        // dispatch(onCreateAuctioneer(values))
       }
     })
 
     const auctionHouseForm = useFormik({
       enableReinitialize: true,
       initialValues:{
-        
+        id:0,
+        auctionHouseName:"",
+        tradeLicensesName:"",
+        tradeLicensesNumber:"",
+        tradeLicensesDocument:"",
+        registerationDate:"",
+        expiryDate:"",
+        country:"",
+        state:"",
+        address:"",
+        numberOfBusinessPartner:0,
+        license:false,
+      },
+      onSubmit:(values) => {
+        console.log(values,"valuesss")
+        dispatch(onUpdateAuctioneerHouse(values))
       }
     })
     const handlePersonalInfo = async () => {
-      if(activeTab == 1)
-      {
-        // formik.handleSubmit()
-        // if (formik.isValid && formik.dirty && success) {
-        toggleTab(activeTab + 1);
-        // }
-      }
-      else if(activeTab == 2){
-            console.log("tab 2 button")
-           } 
+      if(isEditing){
+        if(activeTab == 1){
+          toggleTab(activeTab + 1);
+        }else if(activeTab == 2){
+          console.log("tab 2 button from edit");
+          auctionHouseForm.handleSubmit()
+        }
+      }else{
+        if(activeTab == 1)
+        {
+          formik.handleSubmit()
+          if (formik.isValid && formik.dirty && success) {
+          toggleTab(activeTab + 1);
+          }
+        }
+        else if(activeTab == 2){
+        //  auctionHouseForm.handleSubmit()
+            } 
+        }
     }
-
-    const handleAuctionHouse = () =>{
-      auctionHouseForm.handleSubmit();
-    }
-
-    function toggleTab(tab) {
+    const toggleTab =(tab)=> {
         if (activeTab !== tab) {
           var modifiedSteps = [...passedSteps, tab]
           if (tab >= 1 && tab <= 4) {
@@ -99,6 +121,32 @@ const AuctioneerFormWizard = () => {
           }
         }
       }
+      useEffect(() => {
+        if (isEditing && auctioneer) {
+          formik.setValues((prevValues) => ({
+            ...prevValues,
+            fullName: {
+              en: auctioneer.fullName.en,
+              ar: auctioneer.fullName.ar,
+            },
+            email: auctioneer.email,
+            phoneNumber: auctioneer.userName,
+            countryCode: auctioneer.countryCode,
+          }));
+        }
+      }, [isEditing, auctioneer]);
+
+      useEffect(() =>{
+        if(isEditing && auctioneer){
+          auctionHouseForm.setValues((prevValues)=>({
+            ...prevValues,
+            id:auctioneer.id,
+            tradeLicensesNumber:auctioneer.tradeLicensesNumber,
+            registerationDate:auctioneer.registerationDate,
+            expiryDate:auctioneer.expiryDate,
+          }))
+        }
+      },[isEditing,auctioneer])
   return (
     <>
     <Row>
@@ -146,6 +194,7 @@ const AuctioneerFormWizard = () => {
                             <FormGroup className="mb-3">
                             <Label htmlFor='fullName.en'>EN - Full name</Label>
                             <Input 
+                            disabled={isEditing ? true :false}
                               name='fullName.en'
                               placeholder='Full Name - EN'
                               type='text'
@@ -153,7 +202,7 @@ const AuctioneerFormWizard = () => {
                               id='fullName.en'
                               onChange={formik.handleChange}
                               onBlur={formik.handleBlur}
-                              value={formik.values.fullName?.en || ""}
+                              value={formik.values.fullName.en || ""}
                               invalid={formik.touched.fullName?.en && formik.errors.fullName?.en ? true : false}
                               />
                               {formik.touched.fullName?.en && formik.errors.fullName?.en ?(
@@ -166,6 +215,7 @@ const AuctioneerFormWizard = () => {
                           <FormGroup className="mb-3">
                             <Label htmlFor='fullName.ar'>AR - Full name</Label>
                             <Input 
+                             disabled={isEditing ? true :false}
                               name='fullName.ar'
                               placeholder='Full Name - AR'
                               type='text'
@@ -173,7 +223,7 @@ const AuctioneerFormWizard = () => {
                               id='fullName.ae'
                               onChange={formik.handleChange}
                               onBlur={formik.handleBlur}
-                              value={formik.values.fullName?.ar || ""}
+                              value={formik.values.fullName.ar || ""}
                               invalid={formik.touched.fullName?.ar && formik.errors.fullName?.ar ? true : false}
                               />
                               {formik.touched.fullName?.ar && formik.errors.fullName?.ar ?(
@@ -188,6 +238,7 @@ const AuctioneerFormWizard = () => {
                             <FormGroup className="mb-3">
                             <Label htmlFor='phoneNumber'>Phone</Label>
                             <Input 
+                             disabled={isEditing ? true :false}
                               name='phoneNumber'
                               type='text'
                               className='form-control'
@@ -207,6 +258,7 @@ const AuctioneerFormWizard = () => {
                           <FormGroup className="mb-3">
                             <Label htmlFor='email'>Email</Label>
                             <Input 
+                             disabled={isEditing ? true :false}
                               name='email'
                               type='email'
                               className='form-control'
@@ -231,6 +283,7 @@ const AuctioneerFormWizard = () => {
                             <FormGroup className="mb-3">
                             <Label htmlFor='password'>Password</Label>
                             <Input 
+                             disabled={isEditing ? true :false}
                               name='password'
                               type="password"
                               className='form-control'
@@ -250,7 +303,7 @@ const AuctioneerFormWizard = () => {
                           <FormGroup className="mb-3">
                             <Label htmlFor='confirmPassword'>Confirm Password</Label>
                             <Input
-                             
+                              disabled={isEditing ? true :false}
                               name='confirmPassword'
                               type='Password'
                               className='form-control'
@@ -270,73 +323,7 @@ const AuctioneerFormWizard = () => {
                             </FormGroup>
                           </Col>
                       </Row>
-                      {/* <Row>
-                          <Col md={6}>
-                            <FormGroup className="mb-3">
-                            <Label htmlFor='country'>Country</Label>
-                            <Input 
-                              name='country'
-                              type="select"
-                              className='form-control'
-                              id='country'
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.country || ""}
-                              invalid={formik.touched.country && formik.errors.country ? true : false}
-                              />
-                              {formik.touched.country && formik.errors.country ?(
-                                  <FormFeedback type="invalid">{formik.errors.country}</FormFeedback>
-                              ):null}
-                        
-                            </FormGroup>
-                          </Col>
-                          <Col md={6}>
-                          <FormGroup className="mb-3">
-                            <Label htmlFor='state'>State</Label>
-                            <Input 
-                              name='state'
-                              type='select'
-                              className='form-control'
-                              id='state'
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.state || ""}
-                              invalid={formik.touched.state && formik.errors.state ? true : false}
-                              />
-                             {
-                              formik.touched.state && formik.errors.state ? (
-                                <FormFeedback type="invalid">{formik.errors.state}</FormFeedback>
-                              ):
-                              null
-                             }
-                        
-                            </FormGroup>
-                          </Col>
-                      </Row> */}
-                      {/* <Row>
-                      <Col md={12}>
-                          <FormGroup className="mb-3">
-                            <Label htmlFor='address'>Address</Label>
-                            <Input 
-                              name='address'
-                              type='text'
-                              className='form-control'
-                              id='address'
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.address || ""}
-                              invalid={formik.touched.address && formik.errors.address ? true : false}
-                              />
-                             {
-                              formik.touched.address && formik.errors.address ? (
-                                <FormFeedback type="invalid">{formik.errors.address}</FormFeedback>
-                              ):
-                              null
-                             }
-                        
-                            </FormGroup>
-                          </Col>
-                      </Row> */}
+                    
                            
                     </Form>
                   </TabPane>
@@ -346,39 +333,39 @@ const AuctioneerFormWizard = () => {
                                   <Row>
                                     <Col md={6}>
                                       <FormGroup className="mb-3">
-                                      <Label htmlFor='auctionHoseName'>Auction House Name</Label>
+                                      <Label htmlFor='auctionHouseName'>Auction House Name</Label>
                                       <Input 
-                                        name='auctionHoseName'
+                                        name='auctionHouseName'
                                         type='text'
                                         className='form-control'
-                                        id='auctionHoseName'
+                                        id='auctionHouseName'
                                         onChange={auctionHouseForm.handleChange}
                                         onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.auctionHoseName || ""}
-                                        invalid={auctionHouseForm.touched.auctionHoseName && auctionHouseForm.errors.auctionHoseName ? true : false}
+                                        value={auctionHouseForm.values.auctionHouseName || ""}
+                                        invalid={auctionHouseForm.touched.auctionHouseName && auctionHouseForm.errors.auctionHouseName ? true : false}
                                         />
-                                        {auctionHouseForm.touched.auctionHoseName && auctionHouseForm.errors.auctionHoseName ?(
-                                            <FormFeedback type="invalid">{auctionHouseForm.errors.auctionHoseName}</FormFeedback>
+                                        {auctionHouseForm.touched.auctionHouseName && auctionHouseForm.errors.auctionHouseName ?(
+                                            <FormFeedback type="invalid">{auctionHouseForm.errors.auctionHouseName}</FormFeedback>
                                         ):null}
                                   
                                       </FormGroup>
                                     </Col>
                                     <Col md={6}>
                                     <FormGroup className="mb-3">
-                                      <Label htmlFor='tradeLicenseName'>Trade License Name</Label>
+                                      <Label htmlFor='tradeLicensesName'>Trade License Name</Label>
                                       <Input 
-                                        name='tradeLicenseName'
+                                        name='tradeLicensesName'
                                         type='text'
                                         className='form-control'
-                                        id='tradeLicenseName'
+                                        id='tradeLicensesName'
                                         onChange={auctionHouseForm.handleChange}
                                         onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.tradeLicenseName || ""}
-                                        invalid={auctionHouseForm.touched.tradeLicenseName && auctionHouseForm.errors.tradeLicenseName ? true : false}
+                                        value={auctionHouseForm.values.tradeLicensesName || ""}
+                                        invalid={auctionHouseForm.touched.tradeLicensesName && auctionHouseForm.errors.tradeLicensesName ? true : false}
                                         />
                                       {
-                                        auctionHouseForm.touched.tradeLicenseName && auctionHouseForm.errors.tradeLicenseName ? (
-                                          <FormFeedback type="invalid">{auctionHouseForm.errors.tradeLicenseName}</FormFeedback>
+                                        auctionHouseForm.touched.tradeLicensesName && auctionHouseForm.errors.tradeLicensesName ? (
+                                          <FormFeedback type="invalid">{auctionHouseForm.errors.tradeLicensesName}</FormFeedback>
                                         ):
                                         null
                                       }
@@ -389,19 +376,19 @@ const AuctioneerFormWizard = () => {
                                 <Row>
                                     <Col md={6}>
                                       <FormGroup className="mb-3">
-                                      <Label htmlFor='tradeLicenseNumber'>Trade License Number</Label>
+                                      <Label htmlFor='tradeLicensesNumber'>Trade License Number</Label>
                                       <Input 
-                                        name='tradeLicenseNumber'
+                                        name='tradeLicensesNumber'
                                         type='text'
                                         className='form-control'
-                                        id='tradeLicenseNumber'
+                                        id='tradeLicensesNumber'
                                         onChange={auctionHouseForm.handleChange}
                                         onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.tradeLicenseNumber || ""}
-                                        invalid={auctionHouseForm.touched.tradeLicenseNumber && auctionHouseForm.errors.tradeLicenseNumber ? true : false}
+                                        value={auctionHouseForm.values.tradeLicensesNumber || ""}
+                                        invalid={auctionHouseForm.touched.tradeLicensesNumber && auctionHouseForm.errors.tradeLicensesNumber ? true : false}
                                         />
-                                        {auctionHouseForm.touched.tradeLicenseNumber && auctionHouseForm.errors.tradeLicenseNumber ?(
-                                            <FormFeedback type="invalid">{auctionHouseForm.errors.tradeLicenseNumber}</FormFeedback>
+                                        {auctionHouseForm.touched.tradeLicensesNumber && auctionHouseForm.errors.tradeLicensesNumber ?(
+                                            <FormFeedback type="invalid">{auctionHouseForm.errors.tradeLicensesNumber}</FormFeedback>
                                         ):null}
                                   
                                       </FormGroup>
@@ -410,33 +397,41 @@ const AuctioneerFormWizard = () => {
                                       <Row>
                                         <Col md={8}>
                                         <FormGroup className="mb-3">
-                                      <Label htmlFor='tradeLicenseDocument'>Trade License Document</Label>
+                                      <Label htmlFor='tradeLicensesDocument'>Trade License Document</Label>
                                       <Input 
-                                        name='tradeLicenseDocument'
+                                        name='tradeLicensesDocument'
                                         type='file'
                                         className='form-control'
-                                        id='tradeLicenseDocument'
+                                        id='tradeLicensesDocument'
                                         onChange={auctionHouseForm.handleChange}
                                         onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.tradeLicenseDocument || ""}
-                                        invalid={auctionHouseForm.touched.tradeLicenseDocument && auctionHouseForm.errors.tradeLicenseDocument ? true : false}
+                                        value={auctionHouseForm.values.tradeLicensesDocument || ""}
+                                        invalid={auctionHouseForm.touched.tradeLicensesDocument && auctionHouseForm.errors.tradeLicensesDocument ? true : false}
                                         />
                                       {
-                                        auctionHouseForm.touched.tradeLicenseDocument && auctionHouseForm.errors.tradeLicenseDocument ? (
-                                          <FormFeedback type="invalid">{auctionHouseForm.errors.tradeLicenseDocument}</FormFeedback>
+                                        auctionHouseForm.touched.tradeLicensesDocument && auctionHouseForm.errors.tradeLicensesDocument ? (
+                                          <FormFeedback type="invalid">{auctionHouseForm.errors.tradeLicensesDocument}</FormFeedback>
                                         ):
                                         null
                                       }
                                   
                                       </FormGroup>
                                         </Col>
+            
                                         <Col md={4} className='d-flex align-items-center form-check-success'>
                                         <FormGroup check>
                                           <Label check >
-                                            <Input type="checkbox"/>{' '}
+                                          <Input
+                                                  type="checkbox"
+                                                  name="license"
+                                                  checked={auctionHouseForm.getFieldProps("license").value}
+                                                  {...auctionHouseForm.getFieldProps("license")}
+                                                  
+                                                />{' '}
                                             License Verified
                                           </Label>
                                         </FormGroup>
+                  
                                         </Col>
                                       </Row>
                                    
@@ -445,19 +440,19 @@ const AuctioneerFormWizard = () => {
                                 <Row>
                                     <Col md={6}>
                                       <FormGroup className="mb-3">
-                                      <Label htmlFor='registrationDate'>Registration Date</Label>
+                                      <Label htmlFor='registerationDate'>Registration Date</Label>
                                       <Input 
-                                        name='registrationDate'
+                                        name='registerationDate'
                                         type='date'
                                         className='form-control'
-                                        id='registrationDate'
+                                        id='registerationDate'
                                         onChange={auctionHouseForm.handleChange}
                                         onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.registrationDate || ""}
-                                        invalid={auctionHouseForm.touched.registrationDate && auctionHouseForm.errors.registrationDate ? true : false}
+                                        value={auctionHouseForm.values.registerationDate || ""}
+                                        invalid={auctionHouseForm.touched.registerationDate && auctionHouseForm.errors.registerationDate ? true : false}
                                         />
-                                        {auctionHouseForm.touched.registrationDate && auctionHouseForm.errors.registrationDate ?(
-                                            <FormFeedback type="invalid">{auctionHouseForm.errors.registrationDate}</FormFeedback>
+                                        {auctionHouseForm.touched.registerationDate && auctionHouseForm.errors.registerationDate ?(
+                                            <FormFeedback type="invalid">{auctionHouseForm.errors.registerationDate}</FormFeedback>
                                         ):null}
                                   
                                       </FormGroup>
@@ -488,19 +483,50 @@ const AuctioneerFormWizard = () => {
                                 <Row>
                                     <Col md={6}>
                                       <FormGroup className="mb-3">
-                                      <Label htmlFor='noPartner'>Number Of business partner</Label>
+                                      <Label htmlFor='numberOfBusinessPartner'>Number Of business partner</Label>
                                       <Input 
-                                        name='noPartner'
+                                        name='numberOfBusinessPartner'
                                         type='select'
                                         className='form-control'
-                                        id='noPartner'
+                                        id='numberOfBusinessPartner'
                                         onChange={auctionHouseForm.handleChange}
                                         onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.noPartner || ""}
-                                        invalid={auctionHouseForm.touched.noPartner && auctionHouseForm.errors.noPartner ? true : false}
-                                        />
-                                        {auctionHouseForm.touched.noPartner && auctionHouseForm.errors.noPartner ?(
-                                            <FormFeedback type="invalid">{auctionHouseForm.errors.noPartner}</FormFeedback>
+                                        value={auctionHouseForm.values.numberOfBusinessPartner || ""}
+                                        invalid={auctionHouseForm.touched.numberOfBusinessPartner && auctionHouseForm.errors.numberOfBusinessPartner ? true : false}
+                                        >
+                                          <option value={1}>
+                                            1
+                                          </option>
+                                          <option value={2}>
+                                            2
+                                          </option>
+                                          <option value={3}>
+                                            3
+                                          </option>
+                                          <option value={4}>
+                                            4
+                                          </option>
+                                          <option value={5}>
+                                            5
+                                          </option>
+                                          <option value={5}>
+                                            5
+                                          </option>
+                                          <option value={6}>
+                                            6
+                                          </option>
+                                          <option value={7}>
+                                            7
+                                          </option>
+                                          <option value={8}>
+                                            8
+                                          </option>
+                                          <option value={9}>
+                                            9
+                                          </option>
+                                        </Input>
+                                        {auctionHouseForm.touched.numberOfBusinessPartner && auctionHouseForm.errors.numberOfBusinessPartner ?(
+                                            <FormFeedback type="invalid">{auctionHouseForm.errors.numberOfBusinessPartner}</FormFeedback>
                                         ):null}
                                   
                                       </FormGroup>
@@ -534,7 +560,7 @@ const AuctioneerFormWizard = () => {
                                       <Label htmlFor='subcategories'>Sub Category</Label>
                                       <Input 
                                       
-                                        name='categories'
+                                        name='subcategories'
                                         type='select'
                                         className='form-control'
                                         id='subcategories'

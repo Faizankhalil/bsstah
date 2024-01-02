@@ -1,23 +1,31 @@
 import React, { useEffect } from 'react'
-import { Card, CardBody, Col, Row ,Table} from 'reactstrap'
-import {Link,useParams} from "react-router-dom"
+import { Button, Card, CardBody, Col, Row ,Table} from 'reactstrap'
+import {Link,useParams,useHistory} from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
 import {getAuctioneerDetails as onGetAuctioneerDetails} from "/src/store/actions";
 
 const AuctioneerDetails = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
+  const history = useHistory();
   const auctioneerDetail = useSelector(state => state.AuctioneerReducer.auctioneerDetails)
   useEffect(() => {
     if(id){
       dispatch(onGetAuctioneerDetails(id))
     }
   }, [dispatch,id])
+
+  const handleEditAuctioneer = (recordId) => {
+    history.push(`/edit-auctioneer/${recordId}`);
+  }
  
   return (
     <>
     <div className='page-content'>
       <div className="container-fluid">
+        <div className="d-flex justify-content-end mb-3">
+        <button className="btn btn-primary" onClick={()=>handleEditAuctioneer(auctioneerDetail.id)}>Edit</button>
+        </div>
           <Row>
             {/* left information */}
             <Col md={4}>
@@ -35,7 +43,11 @@ const AuctioneerDetails = () => {
                     )}
                   </div>
                   <div className="flex-grow-1">
-                    <h5>{auctioneerDetail.fullName}</h5>
+                     <h5> 
+                    {auctioneerDetail?.fullName?.en ? auctioneerDetail.fullName?.en:
+                      auctioneerDetail.fullName
+                    }
+                    </h5>
                     <h5>User ID : {auctioneerDetail.id}</h5>
                   </div>
                   </div>
@@ -48,7 +60,11 @@ const AuctioneerDetails = () => {
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">EN Full Name:</div>
-                    <div>United Arab Emirates</div>
+                    <div>
+                    {auctioneerDetail?.fullName?.en ? auctioneerDetail.fullName?.en:
+                      auctioneerDetail.fullName
+                    }
+                    </div>
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">User Name:</div>
@@ -56,11 +72,11 @@ const AuctioneerDetails = () => {
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">Email:</div>
-                    <div>United Arab Emirates</div>
+                    <div>{auctioneerDetail.email}</div>
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">Main Phone number:</div>
-                    <div>United Arab Emirates</div>
+                    <div>{auctioneerDetail.userName}</div>
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">User type:</div>
@@ -84,7 +100,7 @@ const AuctioneerDetails = () => {
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">Business Name:</div>
-                    <div>United Arab Emirates</div>
+                    <div>{auctioneerDetail.businessName}</div>
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">Trade Licenses Number:</div>
@@ -139,7 +155,7 @@ const AuctioneerDetails = () => {
                   <div className='d-flex align-items-center justify-content-between'>
                   <div>
                     <p>Followers</p>
-                    <p>214</p>
+                    <p>{auctioneerDetail.followers}</p>
                   </div>
                   <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
                     <span className="avatar-title rounded-circle bg-primary">

@@ -12,7 +12,6 @@ import {
 
 const CategoryModel = ({show,toggleModel,category,isEdit}) => {
     const dispatch = useDispatch();
-
    const validationSchema = Yup.object().shape({
     name: Yup.object().shape({
       en:Yup.string().required("Please Enter Category Name")
@@ -28,7 +27,6 @@ const CategoryModel = ({show,toggleModel,category,isEdit}) => {
     const validation = useFormik({
       enableReinitialize: true,
         initialValues:{
-          
           name: {
             en: (category && category.name) || "",
             ar: ""
@@ -63,6 +61,7 @@ const CategoryModel = ({show,toggleModel,category,isEdit}) => {
       const handleFormSubmit =()=>{
         validation.handleSubmit();
       }
+   
 
   return (
     <>
@@ -92,6 +91,7 @@ const CategoryModel = ({show,toggleModel,category,isEdit}) => {
                         <FormFeedback type="invalid">{validation.errors.name?.en}</FormFeedback>
                     ):null}
                 </FormGroup>
+
                 <div className='float-end'>
                 <Button type="button" color="primary" onClick={handleFormSubmit}>
                     Add

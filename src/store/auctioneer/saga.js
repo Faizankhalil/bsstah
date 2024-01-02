@@ -13,10 +13,12 @@ import {
     getAuctioneerDetailsFail,
     createAuctioneerSuccess,
     createAuctioneerFail,
+    updateAuctioneerSuccess,
+    updateAuctioneerFail
 } from "./actions"
 import {showToast} from "../toast/action";
 
-import { fetchAuctioneers,fetchAuctioneer,createAuctioneer } from "../../helpers/helperFunction/auctioneerApi";
+import { fetchAuctioneers,fetchAuctioneer,createAuctioneer,updateAuctioneer } from "../../helpers/helperFunction/auctioneerApi";
 
 function* onGetAuctioneers(action){
     try{
@@ -61,10 +63,27 @@ function* onCreateAuctioneer(action){
     }
 }
 
+function* onUpdateAuctioneer(action){
+    try{
+        const response = yield call(updateAuctioneer,action.payload )
+        yield put(updateAuctioneerSuccess(response))
+        console.log(response,"from create auctioneer")
+        const message = response.message || "Auctioneer successfully updated"
+        yield put(showToast(message,"success"))
+    }
+    catch(error){
+        yield put(updateAuctioneerFail(error))
+        const errorMessage = error?.message || "Failed to update Auctioneer"
+        yield put(showToast(errorMessage,"error"))
+    }
+
+}
+
 function* auctioneerSaga(){
     yield takeEvery(GET_AUCTIONEERS_REQUESTED,onGetAuctioneers)
     yield takeEvery(GET_AUCTIONEER_DETAILS_REQUESTED,onGetAuctioneerDetails)
-    yield takeEvery(ADD_AUCTIONEER_REQUESTED,onCreateAuctioneer)
+    yield takeEvery(ADD_AUCTIONEER_REQUESTED,onCreateAuctioneer),
+    yield takeEvery(UPDATE_AUCTIONEER_REQUESTED,onUpdateAuctioneer)
 }
 
 export default auctioneerSaga

@@ -45,6 +45,7 @@ import MemberList from "../pages/Member/MemberList"
   {path:"/auctioneer-list",component:AuctioneerList},
   {path:"/auctioneer-details/:id",component:AuctioneerDetails},
   {path:"/create-auctioneer",component:CreateAuctioneer},
+  {path:"/edit-auctioneer/:id",component:CreateAuctioneer},
 
   //Auction House
   {path:"/auction-house-list", component:AuctionHouseList},

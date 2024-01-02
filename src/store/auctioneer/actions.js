@@ -83,6 +83,21 @@ export const createAuctioneerFail =(error)=>{
 
 // update Auctioneer
 
-export const updateAuctioneerRequest =()=>{}
-export const updateAuctioneerSuccess =()=>{}
-export const updateAuctioneerFail =()=>{}
+export const updateAuctioneerRequest =(auctioneer)=>{
+    return{
+        type:UPDATE_AUCTIONEER_REQUESTED,
+        payload:auctioneer
+    }
+}
+export const updateAuctioneerSuccess =(auctioneer)=>{
+    return{
+        type:UPDATE_AUCTIONEER_SUCCESS,
+        payload:auctioneer
+    }
+}
+export const updateAuctioneerFail =(error)=>{
+    return{
+        type:UPDATE_AUCTIONEER_FAIL,
+        payload:error
+    }
+}

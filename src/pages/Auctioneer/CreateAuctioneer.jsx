@@ -2,14 +2,13 @@ import React from 'react'
 import AuctioneerFormWizard from './AuctioneerFormWizard';
 
 
-const CreateAuctioneer = () => {
- 
-
+const CreateAuctioneer = ({ match }) => {
+const auctioneerId = match.params.id
   return (
     <>
     <div className='page-content'>
       <div className='conatiner-fluid'>
-        <AuctioneerFormWizard/>
+        <AuctioneerFormWizard auctioneerId={auctioneerId}/>
       </div>
     </div>
     </>
