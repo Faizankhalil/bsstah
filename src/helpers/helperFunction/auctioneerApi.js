@@ -65,3 +65,18 @@ export const fetchAuctioneers = async( params ) => {
         throw error.response.data
     }
   }
+
+  export const serachhAuctioneers = async( params ) => {
+    try {
+        const response = await api.get(auctioneerUrl, {
+            params,
+            headers: {
+                'accept': 'application/json',
+                'x-lang': 'en'
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+  }

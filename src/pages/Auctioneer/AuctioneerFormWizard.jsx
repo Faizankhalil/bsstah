@@ -22,6 +22,9 @@ import {
   createAuctioneerRequest as onCreateAuctioneer,
   updateAuctioneerRequest as onUpdateAuctioneerHouse
 } from "/src/store/actions";
+import InputText from '../../Form/InputText';
+import InputEmail from '../../Form/InputEmail';
+import InputPassword from '../../Form/InputPassword';
 
 
 const AuctioneerFormWizard = ({auctioneerId}) => {
@@ -66,7 +69,7 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
       validationSchema:validationSchema,
       onSubmit:(values) => {
         console.log(values)
-        // dispatch(onCreateAuctioneer(values))
+         dispatch(onCreateAuctioneer(values))
       }
     })
 
@@ -191,136 +194,60 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
                     <Form>
                         <Row>
                           <Col md={6}>
-                            <FormGroup className="mb-3">
-                            <Label htmlFor='fullName.en'>EN - Full name</Label>
-                            <Input 
-                            disabled={isEditing ? true :false}
-                              name='fullName.en'
-                              placeholder='Full Name - EN'
-                              type='text'
-                              className='form-control'
-                              id='fullName.en'
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fullName.en || ""}
-                              invalid={formik.touched.fullName?.en && formik.errors.fullName?.en ? true : false}
-                              />
-                              {formik.touched.fullName?.en && formik.errors.fullName?.en ?(
-                                  <FormFeedback type="invalid">{formik.errors.fullName?.en}</FormFeedback>
-                              ):null}
-                        
-                            </FormGroup>
+                            <InputText
+                             name="EN - Full name"
+                             validation={formik.getFieldProps('fullName.en')}
+                             metaProps={formik.getFieldMeta('fullName.en')}
+                             disabled={isEditing ?true:false}
+                             />
+                       
                           </Col>
                           <Col md={6}>
-                          <FormGroup className="mb-3">
-                            <Label htmlFor='fullName.ar'>AR - Full name</Label>
-                            <Input 
-                             disabled={isEditing ? true :false}
-                              name='fullName.ar'
-                              placeholder='Full Name - AR'
-                              type='text'
-                              className='form-control'
-                              id='fullName.ae'
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.fullName.ar || ""}
-                              invalid={formik.touched.fullName?.ar && formik.errors.fullName?.ar ? true : false}
-                              />
-                              {formik.touched.fullName?.ar && formik.errors.fullName?.ar ?(
-                                  <FormFeedback type="invalid">{formik.errors.fullName?.ar}</FormFeedback>
-                              ):null}
-                        
-                            </FormGroup>
+                          <InputText name="AR - Full name"
+                             validation={formik.getFieldProps('fullName.ar')}
+                             metaProps={formik.getFieldMeta('fullName.ar')}
+                             disabled={isEditing ?true:false}
+                             />
+                       
                           </Col>
                       </Row>
                       <Row>
                           <Col md={6}>
-                            <FormGroup className="mb-3">
-                            <Label htmlFor='phoneNumber'>Phone</Label>
-                            <Input 
-                             disabled={isEditing ? true :false}
-                              name='phoneNumber'
-                              type='text'
-                              className='form-control'
-                              id='phoneNumber'
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.phoneNumber || ""}
-                              invalid={formik.touched.phoneNumber && formik.errors.phoneNumber ? true : false}
-                              />
-                              {formik.touched.phoneNumber && formik.errors.phoneNumber ?(
-                                  <FormFeedback type="invalid">{formik.errors.phoneNumber}</FormFeedback>
-                              ):null}
-                        
-                            </FormGroup>
+                          <InputText name="Phone"
+                             validation={formik.getFieldProps('phoneNumber')}
+                             metaProps={formik.getFieldMeta('phoneNumber')}
+                             disabled={isEditing ?true:false}
+                             />
+                      
                           </Col>
                           <Col md={6}>
-                          <FormGroup className="mb-3">
-                            <Label htmlFor='email'>Email</Label>
-                            <Input 
-                             disabled={isEditing ? true :false}
-                              name='email'
-                              type='email'
-                              className='form-control'
-                              id='email'
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.email || ""}
-                              invalid={formik.touched.email && formik.errors.email ? true : false}
-                              />
-                             {
-                              formik.touched.email && formik.errors.email ? (
-                                <FormFeedback type="invalid">{formik.errors.email}</FormFeedback>
-                              ):
-                              null
-                             }
-                        
-                            </FormGroup>
+                            <InputEmail
+                            name="Email"
+                             validation={formik.getFieldProps('email')}
+                             metaProps={formik.getFieldMeta('email')}
+                             disabled={isEditing ?true:false}
+                             />
+                       
                           </Col>
                       </Row>
                       <Row>
                           <Col md={6}>
-                            <FormGroup className="mb-3">
-                            <Label htmlFor='password'>Password</Label>
-                            <Input 
-                             disabled={isEditing ? true :false}
-                              name='password'
-                              type="password"
-                              className='form-control'
-                              id='password'
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.password || ""}
-                              invalid={formik.touched.password && formik.errors.password ? true : false}
-                              />
-                              {formik.touched.password && formik.errors.password ?(
-                                  <FormFeedback type="invalid">{formik.errors.password}</FormFeedback>
-                              ):null}
-                        
-                            </FormGroup>
+                            <InputPassword
+                            name="Password"
+                            validation={formik.getFieldProps('password')}
+                            metaProps={formik.getFieldMeta('password')}
+                            disabled={isEditing ?true:false}
+                            />
+                          
                           </Col>
                           <Col md={6}>
-                          <FormGroup className="mb-3">
-                            <Label htmlFor='confirmPassword'>Confirm Password</Label>
-                            <Input
-                              disabled={isEditing ? true :false}
-                              name='confirmPassword'
-                              type='Password'
-                              className='form-control'
-                              id='confirmPassword'
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              value={formik.values.confirmPassword || ""}
-                              invalid={formik.touched.confirmPassword && formik.errors.confirmPassword ? true : false}
-                              />
-                             {
-                              formik.touched.confirmPassword && formik.errors.confirmPassword ? (
-                                <FormFeedback type="invalid">{formik.errors.confirmPassword}</FormFeedback>
-                              ):
-                              null
-                             }
-                        
-                            </FormGroup>
+                            <InputPassword
+                             name="Confirm Password"
+                             validation={formik.getFieldProps('confirmPassword')}
+                             metaProps={formik.getFieldMeta('confirmPassword')}
+                             disabled={isEditing ?true:false}
+                             />
+                       
                           </Col>
                       </Row>
                     
@@ -423,15 +350,13 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
                                           <Label check >
                                           <Input
                                                   type="checkbox"
-                                                  name="license"
-                                                  checked={auctionHouseForm.getFieldProps("license").value}
+                                                
                                                   {...auctionHouseForm.getFieldProps("license")}
-                                                  
+                                                
                                                 />{' '}
                                             License Verified
                                           </Label>
                                         </FormGroup>
-                  
                                         </Col>
                                       </Row>
                                    

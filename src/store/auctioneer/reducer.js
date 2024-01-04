@@ -8,7 +8,9 @@ import {
     UPDATE_AUCTIONEER_SUCCESS,
     UPDATE_AUCTIONEER_FAIL,
     DELETE_AUCTIONEER_SUCCESS,
-    DELETE_AUCTIONEER_FAIL
+    DELETE_AUCTIONEER_FAIL,
+    SEARCH_AUCTIONEER_SUCCESS,
+    SEARCH_AUCTIONEER_FAIL,
 
 } from "./actionType"
 
@@ -89,6 +91,22 @@ const AuctioneerReducer = (state = INIT_STATE, action) =>{
                     error:action.payload,
                     message:action.payload.message
                 }
+                case SEARCH_AUCTIONEER_SUCCESS:
+                    return{
+                        ...state,
+                        success:action.payload.success,
+                        statusCode:action.payload.statusCode,
+                        auctioneersList:action.payload.data,
+                        message:action.payload.message
+                    }
+            case SEARCH_AUCTIONEER_FAIL:
+                    return{
+                        ...state,
+                        success:action.payload.success,
+                        statusCode:action.payload.statusCode,
+                        error:action.payload,
+                        message:action.payload.message
+                    }
         default:
             return state
     }

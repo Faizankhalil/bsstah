@@ -4,7 +4,8 @@ import {
     GET_AUCTIONEER_DETAILS_REQUESTED,
     ADD_AUCTIONEER_REQUESTED,
     UPDATE_AUCTIONEER_REQUESTED,
-    DELETE_AUCTIONEER_REQUESTED
+    DELETE_AUCTIONEER_REQUESTED,
+    SEARCH_AUCTIONEER_REQUESTED
 } from "./actionType";
 import {
     getAuctioneersSuccess,
@@ -14,11 +15,13 @@ import {
     createAuctioneerSuccess,
     createAuctioneerFail,
     updateAuctioneerSuccess,
-    updateAuctioneerFail
+    updateAuctioneerFail,
+    serachAuctioneersSuccess,
+    searchAuctioneersFail
 } from "./actions"
 import {showToast} from "../toast/action";
 
-import { fetchAuctioneers,fetchAuctioneer,createAuctioneer,updateAuctioneer } from "../../helpers/helperFunction/auctioneerApi";
+import { fetchAuctioneers,fetchAuctioneer,createAuctioneer,updateAuctioneer,serachhAuctioneers } from "../../helpers/helperFunction/auctioneerApi";
 
 function* onGetAuctioneers(action){
     try{
@@ -79,11 +82,25 @@ function* onUpdateAuctioneer(action){
 
 }
 
+//search 
+function* onSearchAuctioneer(action){
+    try{
+        const response = yield call(serachhAuctioneers,action.payload )
+       console.log(action.payload,"payload")
+       console.log(response,"response")
+       yield put(serachAuctioneersSuccess(response))
+    }
+    catch(error){
+        yield put(searchAuctioneersFail(error))
+    }
+}
+
 function* auctioneerSaga(){
     yield takeEvery(GET_AUCTIONEERS_REQUESTED,onGetAuctioneers)
     yield takeEvery(GET_AUCTIONEER_DETAILS_REQUESTED,onGetAuctioneerDetails)
     yield takeEvery(ADD_AUCTIONEER_REQUESTED,onCreateAuctioneer),
-    yield takeEvery(UPDATE_AUCTIONEER_REQUESTED,onUpdateAuctioneer)
+    yield takeEvery(UPDATE_AUCTIONEER_REQUESTED,onUpdateAuctioneer),
+    yield takeEvery(SEARCH_AUCTIONEER_REQUESTED,onSearchAuctioneer)
 }
 
 export default auctioneerSaga

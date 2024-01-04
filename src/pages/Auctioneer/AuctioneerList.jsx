@@ -1,10 +1,11 @@
-import React,{useEffect} from 'react'
+import React,{useEffect,useState,useMemo} from 'react'
 import Breadcrumb from '../../components/Common/Breadcrumb';
-import { Card, Col, Row, Table,Spinner } from 'reactstrap';
+import { Card, Col, Row, Table,Spinner, TabContent } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
-import {getAuctioneers as onGetAuctioneers} from  "/src/store/actions";
+import {getAuctioneers as onGetAuctioneers, searchAuctioneersRequest as onSearchAuctioneer} from  "/src/store/actions";
 import { useSelector, useDispatch } from "react-redux";
-import CustomPagination from '../../components/Common/Pagination';
+// import CustomPagination from '../../components/Common/Pagination';
+import TableContainer from '../../common/TableConatiner';
 
 
 
@@ -13,18 +14,67 @@ document.title = "Auctioneer List | Bsstah";
 const AuctioneerList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const [searchQuery, setSearchQuery] = useState('');
   // from redux state 
   const auctioneerList = useSelector(state => state.AuctioneerReducer.auctioneersList)
   const loading = useSelector(state => state.AuctioneerReducer.loading);
   const count = useSelector(state => state.AuctioneerReducer.count)
 
-useEffect(() => {
-dispatch(onGetAuctioneers(10,0))
-}, [dispatch])
+
+// useEffect(() => {
+//   dispatch(onGetAuctioneers(10,0))
+// }, [])
+
 
 const getAuctionnerID = (recordId) =>{
   history.push(`/auctioneer-details/${recordId}`);
 }
+const handleChange = (e) =>{
+  // const value = e.target.value;
+  // setSearchQuery(value);
+
+  // // Do something with the searchQuery, like dispatching an action or making an API call
+  // console.log(value);
+  //  dispatch(onSearchAuctioneer(100000,0,value))
+}
+const columns = useMemo(
+  () => [
+      {
+          Header: 'ID',
+          accessor: 'id',
+      },
+      {
+          Header: 'Display Name',
+          accessor: 'fullName'
+      },
+      {
+          Header: 'Phone',
+          accessor: 'userName'
+      },
+      {
+          Header: 'Email',
+          accessor: 'email'
+      },
+      {
+          Header: 'Username',
+          accessor: ''
+      },
+      {
+          Header: 'Nationality',
+          accessor: 'nationality'
+      },
+      {
+        Header:'Account Status',
+        accessor:'accountStatus'
+      },
+      {
+        Header:'Auction House Name',
+        accessor:'auctionHouseName'
+      }
+  ],
+  []
+);
+
 
   return (
     <>
@@ -43,6 +93,9 @@ const getAuctionnerID = (recordId) =>{
                             type="text"
                             className="form-control"
                             placeholder="Search"
+                            value={searchQuery}
+                            name='searchAuctioneer'
+                            onChange={handleChange}
                             />
                             <span className="bx bx-search-alt" />
                         </div>
@@ -56,42 +109,21 @@ const getAuctionnerID = (recordId) =>{
                         </div>
               </div>
             </Card>
-            { auctioneerList && count ? (
-              <div className="table-responsive">
-              <Table className="table mb-0">
-                <thead className="table-light">
-                  <tr>
-                    <th>ID</th>
-                    <th>Display Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Username</th>
-                    <th>Nationality</th>
-                    <th>Account Status</th>
-                    <th>Auction House Name</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {auctioneerList.map((item)=>(
-                  <tr key={item.id} onClick={()=>{getAuctionnerID(item.id)}}>
-                    <th scope="row">{item.id}</th>
-                    <td>{item.fullName}</td>
-                    <td>{item.phone}</td>
-                    <td>{item.email}</td>
-                    <td>{item.userName}</td>
-                    <td>{item.nationality}</td>
-                    <td>{item.accountStatus}</td>
-                    <td>{item.auctionHouseName}</td>
-                  </tr>
-                ))}
-                  
-                </tbody>
+            {/* {Array.isArray(auctioneerList) && count ? ( */}
+        
+            <TableContainer 
+            columns={columns}
+            data={auctioneerList}
+            isGlobalFilter={true}
+            isAddOptions={false}
+            customPageSize={10}
+            className="custom-header-css"
+            getAuctionnerID={getAuctionnerID}
+            getRecords={onGetAuctioneers}
+            count={count}
+          />
 
-              </Table>
-              <CustomPagination arrayCount={count} getNewReord={onGetAuctioneers}/>
-            </div>
-
-            ):(
+            {/* ):(
               <div>
                    <div className='d-flex justify-content-center align-items-center p-5'>
                               <Spinner
@@ -106,7 +138,7 @@ const getAuctionnerID = (recordId) =>{
                       </div>
                 </div>
             )}
-            
+           */}
             </Card>
           </Col>
         </Row>

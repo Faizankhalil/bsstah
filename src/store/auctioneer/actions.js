@@ -13,7 +13,10 @@ import {
     UPDATE_AUCTIONEER_FAIL,
     DELETE_AUCTIONEER_REQUESTED,
     DELETE_AUCTIONEER_SUCCESS,
-    DELETE_AUCTIONEER_FAIL
+    DELETE_AUCTIONEER_FAIL,
+    SEARCH_AUCTIONEER_REQUESTED,
+    SEARCH_AUCTIONEER_SUCCESS,
+    SEARCH_AUCTIONEER_FAIL
 } from "./actionType";
 
 // fetch auctioneers List
@@ -98,6 +101,31 @@ export const updateAuctioneerSuccess =(auctioneer)=>{
 export const updateAuctioneerFail =(error)=>{
     return{
         type:UPDATE_AUCTIONEER_FAIL,
+        payload:error
+    }
+}
+
+//Search auctioneers
+
+export const searchAuctioneersRequest = (limit,offset,accountStatus) => {
+    return{
+        type:SEARCH_AUCTIONEER_REQUESTED,
+        payload:{
+            limit,
+            offset,
+            accountStatus,
+        }
+    }
+}
+export const serachAuctioneersSuccess = (auctioneers) => {
+    return{
+        type:SEARCH_AUCTIONEER_SUCCESS,
+        payload:auctioneers
+    }
+}
+export const searchAuctioneersFail = (error) => {
+    return{
+        type:SEARCH_AUCTIONEER_FAIL,
         payload:error
     }
 }
