@@ -10,7 +10,6 @@ const InputPassword = (props) => {
           type="password"
           disabled={props.disabled}
           {...props.validation}
-          {...props.metaProps}
           invalid={props.metaProps.touched && !!props.metaProps.error} // Mark the input as invalid when there's an error
         />
         {props.metaProps.touched && props.metaProps.error && (

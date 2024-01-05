@@ -1,4 +1,4 @@
-import React, { Fragment,useEffect,useCallback  } from "react";
+import React, { Fragment,useEffect,useState  } from "react";
 import PropTypes from "prop-types";
 import {
   useTable,
@@ -9,7 +9,7 @@ import {
   useExpanded,
   usePagination,
 } from "react-table";
-import { Table, Row, Col, Button, Input } from "reactstrap";
+import { Table, Row, Col, Button, Input, Spinner } from "reactstrap";
 import { Filter, DefaultColumnFilter } from "./filters";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -18,10 +18,13 @@ import { useSelector, useDispatch } from "react-redux";
       columns,
       data,
       customPageSize,
+      customPageIndex,
       className,
       getAuctionnerID,
       getRecords,
-      count
+      count,
+      isLoading,
+     
     }) => {
       const {
        
@@ -36,6 +39,7 @@ import { useSelector, useDispatch } from "react-redux";
         pageCount,
         gotoPage,
         nextPage,
+        state,
         previousPage,
         setPageSize,
         state: { pageIndex, pageSize },
@@ -48,10 +52,10 @@ import { useSelector, useDispatch } from "react-redux";
           data,
           defaultColumn: { Filter: DefaultColumnFilter },
           manualPagination: true, // Enable manual pagination
-          pageCount: Math.ceil(count / 10), 
+          pageCount: Math.ceil(count / customPageSize), 
           
           initialState: { 
-            pageIndex: 0, 
+            pageIndex: customPageIndex, 
             pageSize: customPageSize,
             sortBy: [
               {
@@ -66,6 +70,7 @@ import { useSelector, useDispatch } from "react-redux";
     useExpanded,
     usePagination
   );
+
   const dispatch = useDispatch()
   const generateSortingIndicator = column => {
     return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
@@ -75,34 +80,22 @@ import { useSelector, useDispatch } from "react-redux";
     setPageSize(Number(event.target.value));
   };
 
-  // const onChangeInInput = event => {
-  //   const page = event.target.value ? Number(event.target.value) - 1 : 0;
-  //   gotoPage(page);
-  //   dispatch(getRecords(pageSize, page*pageSize));
-  // };
-  const onChangeInInput = useCallback(
-    event => {
-      const page = event.target.value ? Number(event.target.value) - 1 : 0;
-      gotoPage(page);
-      dispatch(getRecords(pageSize, page*pageSize));
-    },
-    [gotoPage]
-  );
-  const handleNext = () =>{
-    nextPage();
-    dispatch(getRecords(pageSize, pageIndex*pageSize));
-  }
-   
-  // const data = useSelector(state => state.AuctioneerReducer.auctioneersList)
+  const onChangeInInput = (event) => {
+    const page = event.target.value ? Number(event.target.value) - 1 : 0;
+    gotoPage(page);
+  };
+ 
+
  useEffect(() => {
   console.log("Updated pageIndex:", pageIndex);
   dispatch(getRecords(pageSize, pageIndex));
-}, [dispatch]);
- 
-  console.log(pageCount,"pageCount");
+}, [state.pageIndex,state.pageSize]);
+
   return (
+    
     <Fragment>
       <div className="table-responsive react-table">
+      {!isLoading ? (
         <Table bordered hover {...getTableProps()} className={className}>
           <thead className="table-light table-nowrap">
             {headerGroups.map(headerGroup => (
@@ -119,7 +112,6 @@ import { useSelector, useDispatch } from "react-redux";
               </tr>
             ))}
           </thead>
-
           <tbody {...getTableBodyProps()}>
             {page.map(row => {
               prepareRow(row);
@@ -143,6 +135,21 @@ import { useSelector, useDispatch } from "react-redux";
             })}
           </tbody>
         </Table>
+        ):(
+          <div>
+          <div className='d-flex justify-content-center align-items-center p-5'>
+                    <Spinner
+                      color="primary"
+                      style={{
+                        height: '3rem',
+                        width: '3rem'
+                      }}
+                    >
+                      Loading...
+                    </Spinner>
+            </div>
+          </div>
+        )}
       </div>
 
       <Row className="justify-content-md-end justify-content-center align-items-center">
@@ -183,7 +190,7 @@ import { useSelector, useDispatch } from "react-redux";
 
         <Col className="col-md-auto">
           <div className="d-flex gap-1">
-            <Button color="primary" onClick={handleNext} disabled={!canNextPage}>
+            <Button color="primary" onClick={nextPage} disabled={!canNextPage}>
               {">"}
             </Button>
             <Button
@@ -196,6 +203,7 @@ import { useSelector, useDispatch } from "react-redux";
           </div>
         </Col>
       </Row>
+      
     </Fragment>
   );
 };

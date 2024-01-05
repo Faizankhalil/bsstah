@@ -26,9 +26,10 @@ import { fetchAuctioneers,fetchAuctioneer,createAuctioneer,updateAuctioneer,sera
 function* onGetAuctioneers(action){
     try{
         const {limit, offset} = action.payload;
+        const all = limit * offset
         const response = yield call(fetchAuctioneers,{
             limit,
-            offset
+            offset:all
         })
         yield put(getAuctioneersSuccess(response))
     }

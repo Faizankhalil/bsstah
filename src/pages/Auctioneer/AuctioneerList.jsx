@@ -16,27 +16,24 @@ const AuctioneerList = () => {
   const history = useHistory();
   const [searchQuery, setSearchQuery] = useState('');
   // from redux state 
-  const auctioneerList = useSelector(state => state.AuctioneerReducer.auctioneersList)
-  const loading = useSelector(state => state.AuctioneerReducer.loading);
+   const auctioneerList = useSelector(state => state.AuctioneerReducer.auctioneersList)
+  const baseAuctioneerList = useSelector(state => state.AuctioneerReducer)
+  const isLoading = useSelector(state => state.AuctioneerReducer.loading);
   const count = useSelector(state => state.AuctioneerReducer.count)
 
-
-// useEffect(() => {
-//   dispatch(onGetAuctioneers(10,0))
-// }, [])
-
-
-const getAuctionnerID = (recordId) =>{
-  history.push(`/auctioneer-details/${recordId}`);
-}
-const handleChange = (e) =>{
-  // const value = e.target.value;
-  // setSearchQuery(value);
-
-  // // Do something with the searchQuery, like dispatching an action or making an API call
-  // console.log(value);
-  //  dispatch(onSearchAuctioneer(100000,0,value))
-}
+      const getAuctionnerID = (recordId) =>{
+        history.push(`/auctioneer-details/${recordId}`);
+      }
+      const handleChange = (e) =>{
+        const value = e.target.value;
+        setSearchQuery(value);
+        if(value == ""){
+          dispatch(onGetAuctioneers(10,0))
+        }else{
+          dispatch(onSearchAuctioneer(100000,0,value))
+        }
+       
+      }
 const columns = useMemo(
   () => [
       {
@@ -109,36 +106,24 @@ const columns = useMemo(
                         </div>
               </div>
             </Card>
-            {/* {Array.isArray(auctioneerList) && count ? ( */}
-        
+            {/* {Array.isArray(auctioneerList) && auctioneerList.length > 0 ? ( */}
             <TableContainer 
             columns={columns}
             data={auctioneerList}
             isGlobalFilter={true}
             isAddOptions={false}
-            customPageSize={10}
+            customPageSize={baseAuctioneerList.limit}
+            customPageIndex={baseAuctioneerList.offset}
             className="custom-header-css"
             getAuctionnerID={getAuctionnerID}
             getRecords={onGetAuctioneers}
             count={count}
-          />
-
-            {/* ):(
-              <div>
-                   <div className='d-flex justify-content-center align-items-center p-5'>
-                              <Spinner
-                                color="primary"
-                                style={{
-                                  height: '3rem',
-                                  width: '3rem'
-                                }}
-                              >
-                                Loading...
-                              </Spinner>
-                      </div>
-                </div>
-            )}
-           */}
+            isLoading={isLoading}
+            searchRequest={onSearchAuctioneer}
+          /> 
+          {/* ):("no record")} */}
+                
+          
             </Card>
           </Col>
         </Row>
