@@ -4,7 +4,6 @@ import { Card, Col, Row, Table,Spinner, TabContent } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
 import {getAuctioneers as onGetAuctioneers, searchAuctioneersRequest as onSearchAuctioneer} from  "/src/store/actions";
 import { useSelector, useDispatch } from "react-redux";
-// import CustomPagination from '../../components/Common/Pagination';
 import TableContainer from '../../common/TableConatiner';
 
 
@@ -106,7 +105,6 @@ const columns = useMemo(
                         </div>
               </div>
             </Card>
-            {/* {Array.isArray(auctioneerList) && auctioneerList.length > 0 ? ( */}
             <TableContainer 
             columns={columns}
             data={auctioneerList}
@@ -120,9 +118,7 @@ const columns = useMemo(
             count={count}
             isLoading={isLoading}
             searchRequest={onSearchAuctioneer}
-          /> 
-          {/* ):("no record")} */}
-                
+          />    
           
             </Card>
           </Col>
