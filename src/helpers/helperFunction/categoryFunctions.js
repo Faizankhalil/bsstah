@@ -26,7 +26,7 @@ export const addCategory = async (data) => {
     try {
       const response = await axios.post(categoryUrl, data, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': token,
           'Accept': 'application/json',
           'x-lang': 'en'
         }
@@ -45,7 +45,7 @@ export const addCategory = async (data) => {
     console.log(data);
       const response = await axios.put(`${categoryUrl}${data.id}`, data, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': token,
           'Accept': 'application/json',
           'x-lang': 'en'
         }
@@ -67,7 +67,7 @@ export const addCategory = async (data) => {
     console.log(url);
       const response = await axios.delete(`${categoryUrl}${RecordId}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': token,
           'Accept': 'application/json',
           'x-lang': 'en'
         }

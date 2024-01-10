@@ -1,3 +1,6 @@
+export const UPLOADFILE = "/upload/"
+export const AUCTION_HOUSE_DETAILS = "/auction-house/details/"
+
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register"
 

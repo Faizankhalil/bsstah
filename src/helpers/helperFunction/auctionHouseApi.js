@@ -8,7 +8,7 @@ export const fetchAuctionHouse = async( params ) => {
         const response = await api.get(auctionHouselist, {
             params,
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': token,
                 'accept': 'application/json',
                 'x-lang': 'en'
             }

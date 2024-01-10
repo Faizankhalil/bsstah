@@ -13,3 +13,5 @@ export const updateAuctioneerHouseurl = `${baseUrl}/auction-house/update-auction
 //Auction House
 
 export const auctionHouselist = `${baseUrl}/auction-house/`
+
+

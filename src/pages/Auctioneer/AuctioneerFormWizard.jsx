@@ -20,23 +20,27 @@ import * as Yup from 'yup';
 import {useSelector, useDispatch } from 'react-redux';
 import {
   createAuctioneerRequest as onCreateAuctioneer,
-  updateAuctioneerRequest as onUpdateAuctioneerHouse
+  updateAuctioneerRequest as onUpdateAuctioneerHouse,
+  uploadFileRequested as onUploadFile
+
 } from "/src/store/actions";
 import InputText from '../../Form/InputText';
 import InputEmail from '../../Form/InputEmail';
 import InputPassword from '../../Form/InputPassword';
+import InputCheck from '../../Form/InputCheck';
 
 
 const AuctioneerFormWizard = ({auctioneerId}) => {
     const dispatch = useDispatch();
     const [activeTab, setactiveTab] = useState(1)
     const [passedSteps, setPassedSteps] = useState([1])
-    const [license, setLicense] = useState(false)
+    const [file, setfile] = useState()
+    const newauctioneer = useSelector(state => state.AuctioneerReducer.auctioneer);
     const auctioneer = useSelector(state => state.AuctioneerReducer.auctioneerDetails); 
-    // console.log(auctioneer)
-    // console.log(auctioneerId)
+    const auctionHouse = useSelector(state => state.auctionHouseReducer.auctionHouse); 
+    const success = useSelector(state => state.AuctioneerReducer.success);
+    const fileUrl = useSelector(state => state.fileReducer?.file)
     const isEditing = Boolean(auctioneerId);
-    console.log(isEditing,"isediting")
     const validationSchema = Yup.object().shape({
       fullName: Yup.object().shape({
         en:Yup.string().required("Please Enter Full Name in English"),
@@ -52,6 +56,17 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required("Please Re-Enter password"),
       phoneNumber:Yup.string().required("Please Enter Phone Number"),
+     })
+     const validationSchemaAuctionHouse = Yup.object().shape({
+      auctionHouseName: Yup.string().required("Please Enter Auction House Name"),
+      tradeLicensesName: Yup.string().required("Please Enter License Name"),
+      tradeLicensesNumber: Yup.string().required("Please Enter License Number"),
+      registerationDate: Yup.string().required("Please select registeration date"),
+      expiryDate: Yup.string().required("Please select expiry date"),
+      country: Yup.string().required("Please select country"),
+      state: Yup.string().required("Please select state"),
+      address: Yup.string().required("Please Enter address")
+
      })
     const formik = useFormik({
       enableReinitialize: true,
@@ -76,22 +91,23 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
     const auctionHouseForm = useFormik({
       enableReinitialize: true,
       initialValues:{
-        id:0,
-        auctionHouseName:"",
-        tradeLicensesName:"",
-        tradeLicensesNumber:"",
-        tradeLicensesDocument:"",
-        registerationDate:"",
-        expiryDate:"",
-        country:"",
-        state:"",
-        address:"",
-        numberOfBusinessPartner:0,
-        license:false,
+        id:auctionHouse? auctionHouse.id:newauctioneer.id,
+        auctionHouseName:auctionHouse? auctionHouse.auctionHouseName :"",
+        tradeLicensesName:auctionHouse? auctionHouse.tradeLicensesName:"",
+        tradeLicensesNumber:auctionHouse? auctionHouse.tradeLicensesNumber:"",
+        tradeLicensesDocument:auctionHouse? auctionHouse.tradeLicensesDocument:"",
+        registerationDate:auctionHouse? auctionHouse.registerationDate:"",
+        expiryDate:auctionHouse? auctionHouse.expiryDate:"",
+        country:auctionHouse? auctionHouse.country:"",
+        state:auctionHouse? auctionHouse.state:"",
+        address:auctionHouse? auctionHouse.address:"",
+        numberOfBusinessPartner:auctionHouse? auctionHouse.numberOfBusinessPartner:0,
+        licenseVerified:auctionHouse? auctionHouse.licenseVerified:true,
       },
+      // validationSchema:validationSchemaAuctionHouse,
       onSubmit:(values) => {
-        console.log(values,"valuesss")
-        dispatch(onUpdateAuctioneerHouse(values))
+        console.log(values,"values")
+        //dispatch(onUpdateAuctioneerHouse(values))
       }
     })
     const handlePersonalInfo = async () => {
@@ -104,14 +120,17 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
         }
       }else{
         if(activeTab == 1)
-        {
-          formik.handleSubmit()
-          if (formik.isValid && formik.dirty && success) {
+        { 
+           formik.handleSubmit();
+        if(formik.isValid && formik.dirty){
           toggleTab(activeTab + 1);
-          }
+        }
+             
+          
         }
         else if(activeTab == 2){
-        //  auctionHouseForm.handleSubmit()
+          console.log("create auction house")
+          auctionHouseForm.handleSubmit()
             } 
         }
     }
@@ -139,17 +158,57 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
         }
       }, [isEditing, auctioneer]);
 
-      useEffect(() =>{
-        if(isEditing && auctioneer){
+      useEffect(()=>{
+        if(newauctioneer){
+          console.log(newauctioneer.id,"newauctioneerId useeffect")
           auctionHouseForm.setValues((prevValues)=>({
             ...prevValues,
-            id:auctioneer.id,
-            tradeLicensesNumber:auctioneer.tradeLicensesNumber,
-            registerationDate:auctioneer.registerationDate,
-            expiryDate:auctioneer.expiryDate,
+            id:newauctioneer.id,
           }))
         }
-      },[isEditing,auctioneer])
+      }, [newauctioneer])
+
+      // useEffect(() =>{
+      //   if(isEditing && auctionHouse){
+      //     auctionHouseForm.setValues((prevValues)=>({
+      //      ...prevValues,
+      //       id:auctionHouse.id,
+      //       auctionHouseName:auctionHouse.auctionHouseName,
+      //       tradeLicensesName:auctionHouse.tradeLicensesName,
+      //       tradeLicensesNumber:auctionHouse.tradeLicensesNumber,
+      //       tradeLicensesDocument:auctionHouse.tradeLicensesDocument,
+      //       registerationDate:auctionHouse.registerationDate,
+      //       expiryDate:auctionHouse.expiryDate,
+      //       country:auctionHouse.country,
+      //       state:auctionHouse.state,
+      //       address:auctionHouse.address,
+      //       numberOfBusinessPartner:auctionHouse.numberOfBusinessPartner,
+      //       licenseVerified:auctionHouse.licenseVerified,
+      //     }))
+      //   }
+      // },[isEditing,auctionHouse])
+
+    useEffect(() => {
+    if(fileUrl){
+      auctionHouseForm.setValues((prevValues)=>({
+        ...prevValues,
+        tradeLicensesDocument:fileUrl.url,
+      }))
+    }
+    }, [fileUrl])
+
+      const handleFileChange = (event)=>{
+        const selectedFile = event.target.files[0]
+        setfile(selectedFile)
+      }
+      useEffect(() => {
+        if (file) {
+          const formData = new FormData();
+          formData.append('file', file);
+          dispatch(onUploadFile(formData))
+          setfile(null)
+        }
+      }, [file]); 
   return (
     <>
     <Row>
@@ -259,104 +318,50 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
                             <Form>
                                   <Row>
                                     <Col md={6}>
-                                      <FormGroup className="mb-3">
-                                      <Label htmlFor='auctionHouseName'>Auction House Name</Label>
-                                      <Input 
-                                        name='auctionHouseName'
-                                        type='text'
-                                        className='form-control'
-                                        id='auctionHouseName'
-                                        onChange={auctionHouseForm.handleChange}
-                                        onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.auctionHouseName || ""}
-                                        invalid={auctionHouseForm.touched.auctionHouseName && auctionHouseForm.errors.auctionHouseName ? true : false}
-                                        />
-                                        {auctionHouseForm.touched.auctionHouseName && auctionHouseForm.errors.auctionHouseName ?(
-                                            <FormFeedback type="invalid">{auctionHouseForm.errors.auctionHouseName}</FormFeedback>
-                                        ):null}
-                                  
-                                      </FormGroup>
+                                    <InputText
+                                      name="Auction House Name"
+                                      validation={auctionHouseForm.getFieldProps('auctionHouseName')}
+                                      metaProps={auctionHouseForm.getFieldMeta('auctionHouseName')}
+                                      />
+
+                                   
                                     </Col>
                                     <Col md={6}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor='tradeLicensesName'>Trade License Name</Label>
-                                      <Input 
-                                        name='tradeLicensesName'
-                                        type='text'
-                                        className='form-control'
-                                        id='tradeLicensesName'
-                                        onChange={auctionHouseForm.handleChange}
-                                        onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.tradeLicensesName || ""}
-                                        invalid={auctionHouseForm.touched.tradeLicensesName && auctionHouseForm.errors.tradeLicensesName ? true : false}
-                                        />
-                                      {
-                                        auctionHouseForm.touched.tradeLicensesName && auctionHouseForm.errors.tradeLicensesName ? (
-                                          <FormFeedback type="invalid">{auctionHouseForm.errors.tradeLicensesName}</FormFeedback>
-                                        ):
-                                        null
-                                      }
-                                  
-                                      </FormGroup>
+                                    <InputText
+                                      name="Trade License Name"
+                                      validation={auctionHouseForm.getFieldProps('tradeLicensesName')}
+                                      metaProps={auctionHouseForm.getFieldMeta('tradeLicensesName')}
+                                      />
+                                   
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col md={6}>
-                                      <FormGroup className="mb-3">
-                                      <Label htmlFor='tradeLicensesNumber'>Trade License Number</Label>
-                                      <Input 
-                                        name='tradeLicensesNumber'
-                                        type='text'
-                                        className='form-control'
-                                        id='tradeLicensesNumber'
-                                        onChange={auctionHouseForm.handleChange}
-                                        onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.tradeLicensesNumber || ""}
-                                        invalid={auctionHouseForm.touched.tradeLicensesNumber && auctionHouseForm.errors.tradeLicensesNumber ? true : false}
-                                        />
-                                        {auctionHouseForm.touched.tradeLicensesNumber && auctionHouseForm.errors.tradeLicensesNumber ?(
-                                            <FormFeedback type="invalid">{auctionHouseForm.errors.tradeLicensesNumber}</FormFeedback>
-                                        ):null}
-                                  
-                                      </FormGroup>
+                                    <InputText
+                                      name="Trade License Number"
+                                      validation={auctionHouseForm.getFieldProps('tradeLicensesNumber')}
+                                      metaProps={auctionHouseForm.getFieldMeta('tradeLicensesNumber')}
+                                      />
+                                     
                                     </Col>
                                     <Col md={6}>
                                       <Row>
                                         <Col md={8}>
                                         <FormGroup className="mb-3">
                                       <Label htmlFor='tradeLicensesDocument'>Trade License Document</Label>
-                                      <Input 
-                                        name='tradeLicensesDocument'
-                                        type='file'
-                                        className='form-control'
-                                        id='tradeLicensesDocument'
-                                        onChange={auctionHouseForm.handleChange}
-                                        onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.tradeLicensesDocument || ""}
-                                        invalid={auctionHouseForm.touched.tradeLicensesDocument && auctionHouseForm.errors.tradeLicensesDocument ? true : false}
-                                        />
-                                      {
-                                        auctionHouseForm.touched.tradeLicensesDocument && auctionHouseForm.errors.tradeLicensesDocument ? (
-                                          <FormFeedback type="invalid">{auctionHouseForm.errors.tradeLicensesDocument}</FormFeedback>
-                                        ):
-                                        null
-                                      }
+                                      <input type="file" className='form-control' onChange={handleFileChange} />
+                                   
                                   
                                       </FormGroup>
                                         </Col>
             
                                         <Col md={4} className='d-flex align-items-center form-check-success'>
-                                        <FormGroup check>
-                                          <Label check >
-                                          <Input
-                                                  type="checkbox"
-                                                
-                                                  {...auctionHouseForm.getFieldProps("license")}
-                                                
-                                                />{' '}
-                                            License Verified
-                                          </Label>
-                                        </FormGroup>
+                                          <InputCheck 
+                                          name="License Verified"
+                                          validation={auctionHouseForm.getFieldProps('licenseVerified')}
+                                          metaProps={auctionHouseForm.getFieldMeta('licenseVerified')}
+                                          />
+                                       
                                         </Col>
                                       </Row>
                                    

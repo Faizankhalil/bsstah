@@ -4,7 +4,7 @@ import * as url from "./url_helper"
 
 // Gets the logged in user data from local session
 const getLoggedInUser = () => {
-  const user = localStorage.getItem("user")
+  const user = localStorage.getItem("authUser")
   if (user) return JSON.parse(user)
   return null
 }
@@ -86,6 +86,11 @@ const postJwtRegister = (url, data) => {
       throw message
     })
 }
+export const uploadfile = data => post(url.UPLOADFILE,data,{})
+export const getAuctionHouseDetail = id => get(`${url.AUCTION_HOUSE_DETAILS}${id}`)
+
+
+
 
 // Login Method
 const postJwtLogin = data => post(url.POST_FAKE_JWT_LOGIN, data)

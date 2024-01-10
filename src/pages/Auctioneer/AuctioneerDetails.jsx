@@ -2,16 +2,21 @@ import React, { useEffect } from 'react'
 import { Button, Card, CardBody, Col, Row ,Table} from 'reactstrap'
 import {Link,useParams,useHistory} from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux";
-import {getAuctioneerDetails as onGetAuctioneerDetails} from "/src/store/actions";
+import {
+  getAuctioneerDetails as onGetAuctioneerDetails,
+  getAuctionHouseDetailsRequested as onGetAuctionHouseDetails
+} from "/src/store/actions";
 
 const AuctioneerDetails = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
   const auctioneerDetail = useSelector(state => state.AuctioneerReducer.auctioneerDetails)
+  const auctionHouseDetails = useSelector(state => state.auctionHouseReducer.auctionHouse)
   useEffect(() => {
     if(id){
       dispatch(onGetAuctioneerDetails(id))
+      dispatch(onGetAuctionHouseDetails(id))
     }
   }, [dispatch,id])
 
@@ -45,7 +50,7 @@ const AuctioneerDetails = () => {
                   <div className="flex-grow-1">
                      <h5> 
                     {auctioneerDetail?.fullName?.en ? auctioneerDetail.fullName?.en:
-                      auctioneerDetail.fullName
+                      "No Name"
                     }
                     </h5>
                     <h5>User ID : {auctioneerDetail.id}</h5>
@@ -62,13 +67,13 @@ const AuctioneerDetails = () => {
                     <div className="fw-bold">EN Full Name:</div>
                     <div>
                     {auctioneerDetail?.fullName?.en ? auctioneerDetail.fullName?.en:
-                      auctioneerDetail.fullName
+                      "No name"
                     }
                     </div>
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">User Name:</div>
-                    <div>United Arab Emirates</div>
+                    <div>{auctioneerDetail.userName}</div>
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">Email:</div>
@@ -84,7 +89,7 @@ const AuctioneerDetails = () => {
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">Account Status:</div>
-                    <div>United Arab Emirates</div>
+                    <div>{auctioneerDetail.accountStatus}</div>
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">Role:</div>
@@ -104,11 +109,11 @@ const AuctioneerDetails = () => {
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">Trade Licenses Number:</div>
-                    <div>United Arab Emirates</div>
+                    <div>{auctioneerDetail.tradeLicensesNumber}</div>
                   </div>
                   <div className="border-bottom d-flex justify-content-between align-items-center p-3">
                     <div className="fw-bold">Expiry Date:</div>
-                    <div>United Arab Emirates</div>
+                    <div>{auctioneerDetail.expiryDate}</div>
                   </div>
                 </CardBody>
               </Card>

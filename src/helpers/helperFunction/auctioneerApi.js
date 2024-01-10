@@ -22,7 +22,7 @@ export const fetchAuctioneers = async( params ) => {
     try {
         const response = await api.get(`${auctioneerProfile}/${id}`, {
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': token,
                 'accept': 'application/json',
                 'x-lang': 'en'
             }
@@ -37,7 +37,7 @@ export const fetchAuctioneers = async( params ) => {
     try{
         const response = await api.post(auctioneerCreate,data,{
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': token,
                 'accept': 'application/json',
                 'x-lang': 'en'
             } 
@@ -54,7 +54,7 @@ export const fetchAuctioneers = async( params ) => {
     try{
         const response = await api.put(updateAuctioneerHouseurl,data,{
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': token,
                 'accept': 'application/json',
                 'x-lang': 'en'
             } 

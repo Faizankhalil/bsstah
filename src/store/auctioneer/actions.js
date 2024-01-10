@@ -107,13 +107,13 @@ export const updateAuctioneerFail =(error)=>{
 
 //Search auctioneers
 
-export const searchAuctioneersRequest = (limit,offset,accountStatus) => {
+export const searchAuctioneersRequest = (limit,offset,fullName) => {
     return{
         type:SEARCH_AUCTIONEER_REQUESTED,
         payload:{
             limit,
             offset,
-            accountStatus,
+            fullName,
         }
     }
 }

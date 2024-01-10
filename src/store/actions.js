@@ -51,3 +51,5 @@ export * from "./auctioneer/actions";
 // Auction House
 
 export * from "./auctionHouse/actions"
+
+export * from "./fileUpload/action"
