@@ -86,8 +86,14 @@ const postJwtRegister = (url, data) => {
       throw message
     })
 }
+//upload file
 export const uploadfile = data => post(url.UPLOADFILE,data,{})
+
+//Auction House
 export const getAuctionHouseDetail = id => get(`${url.AUCTION_HOUSE_DETAILS}${id}`)
+
+//Bidders
+export const getBiddersList = (params) => get(url.BIDDER_LIST,params,{})
 
 
 

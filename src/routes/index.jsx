@@ -25,6 +25,9 @@ import CreateAuctioneer from "../pages/Auctioneer/CreateAuctioneer"
 import AuctionHouseList from "../pages/AuctionHouse/AuctionHouseList"
 import CreateAuctionHouse from "../pages/AuctionHouse/CreateAuctionHouse"
 
+//bidder
+import BidderList from "../pages/bidder/index"
+
 //Config
 import MainConfig from "../pages/Configurations/MainConfig"
 import AuctionConfig from "../pages/Configurations/AuctionConfig"
@@ -51,6 +54,9 @@ import MemberList from "../pages/Member/MemberList"
   {path:"/auction-house-list", component:AuctionHouseList},
   {path:"/create-auction-house", component:CreateAuctionHouse},
   {path:"/member", component:MemberList},
+
+  //Bidder List
+  {path:"/bidder-list", component:BidderList},
 
   //Config
   {path:"/Configuration", component:MainConfig},

@@ -50,6 +50,11 @@ export * from "./auctioneer/actions";
 
 // Auction House
 
-export * from "./auctionHouse/actions"
+export * from "./auctionHouse/actions";
 
-export * from "./fileUpload/action"
+//file
+export * from "./fileUpload/action";
+
+//bidders
+
+export * from "./bidder/actions"

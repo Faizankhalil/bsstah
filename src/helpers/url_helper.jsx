@@ -1,5 +1,11 @@
+//upload file
 export const UPLOADFILE = "/upload/"
+
+//auction House
 export const AUCTION_HOUSE_DETAILS = "/auction-house/details/"
+
+//Bidder
+export const BIDDER_LIST = "/bidders/"
 
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register"

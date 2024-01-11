@@ -27,6 +27,7 @@ export const fetchAuctioneers = async( params ) => {
                 'x-lang': 'en'
             }
         });
+        console.log(response.data,"responsedata")
         return response.data;
     } catch (error) {
         throw error.response.data;

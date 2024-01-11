@@ -28,6 +28,7 @@ import InputText from '../../Form/InputText';
 import InputEmail from '../../Form/InputEmail';
 import InputPassword from '../../Form/InputPassword';
 import InputCheck from '../../Form/InputCheck';
+import InputDate from '../../Form/InputDate';
 
 
 const AuctioneerFormWizard = ({auctioneerId}) => {
@@ -104,10 +105,10 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
         numberOfBusinessPartner:auctionHouse? auctionHouse.numberOfBusinessPartner:0,
         licenseVerified:auctionHouse? auctionHouse.licenseVerified:true,
       },
-      // validationSchema:validationSchemaAuctionHouse,
+       validationSchema:validationSchemaAuctionHouse,
       onSubmit:(values) => {
         console.log(values,"values")
-        //dispatch(onUpdateAuctioneerHouse(values))
+        dispatch(onUpdateAuctioneerHouse(values))
       }
     })
     const handlePersonalInfo = async () => {
@@ -296,6 +297,7 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
                             validation={formik.getFieldProps('password')}
                             metaProps={formik.getFieldMeta('password')}
                             disabled={isEditing ?true:false}
+                            hidden={isEditing? true : false}
                             />
                           
                           </Col>
@@ -305,6 +307,7 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
                              validation={formik.getFieldProps('confirmPassword')}
                              metaProps={formik.getFieldMeta('confirmPassword')}
                              disabled={isEditing ?true:false}
+                             hidden={isEditing? true : false}
                              />
                        
                           </Col>
@@ -369,45 +372,34 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
                                 </Row>
                                 <Row>
                                     <Col md={6}>
-                                      <FormGroup className="mb-3">
-                                      <Label htmlFor='registerationDate'>Registration Date</Label>
-                                      <Input 
-                                        name='registerationDate'
-                                        type='date'
-                                        className='form-control'
-                                        id='registerationDate'
-                                        onChange={auctionHouseForm.handleChange}
-                                        onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.registerationDate || ""}
-                                        invalid={auctionHouseForm.touched.registerationDate && auctionHouseForm.errors.registerationDate ? true : false}
-                                        />
-                                        {auctionHouseForm.touched.registerationDate && auctionHouseForm.errors.registerationDate ?(
-                                            <FormFeedback type="invalid">{auctionHouseForm.errors.registerationDate}</FormFeedback>
-                                        ):null}
-                                  
-                                      </FormGroup>
+                                    <InputDate 
+                                          name="Registration Date"
+                                          validation={auctionHouseForm.getFieldProps('registerationDate')}
+                                          metaProps={auctionHouseForm.getFieldMeta('registerationDate')}
+                                          />
                                     </Col>
                                     <Col md={6}>
-                                    <FormGroup className="mb-3">
-                                      <Label htmlFor='expiryDate'>Expiry Date</Label>
-                                      <Input 
-                                        name='expiryDate'
-                                        type='date'
-                                        className='form-control'
-                                        id='expiryDate'
-                                        onChange={auctionHouseForm.handleChange}
-                                        onBlur={auctionHouseForm.handleBlur}
-                                        value={auctionHouseForm.values.expiryDate || ""}
-                                        invalid={auctionHouseForm.touched.expiryDate && auctionHouseForm.errors.expiryDate ? true : false}
-                                        />
-                                      {
-                                        auctionHouseForm.touched.expiryDate && auctionHouseForm.errors.expiryDate ? (
-                                          <FormFeedback type="invalid">{auctionHouseForm.errors.expiryDate}</FormFeedback>
-                                        ):
-                                        null
-                                      }
-                                  
-                                      </FormGroup>
+                                    <InputDate 
+                                          name="Expiry Date"
+                                          validation={auctionHouseForm.getFieldProps('expiryDate')}
+                                          metaProps={auctionHouseForm.getFieldMeta('expiryDate')}
+                                          />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={6}>
+                                    <InputText 
+                                          name="Country"
+                                          validation={auctionHouseForm.getFieldProps('country')}
+                                          metaProps={auctionHouseForm.getFieldMeta('country')}
+                                          />
+                                    </Col>
+                                    <Col md={6}>
+                                    <InputText 
+                                          name="State"
+                                          validation={auctionHouseForm.getFieldProps('state')}
+                                          metaProps={auctionHouseForm.getFieldMeta('state')}
+                                          />
                                     </Col>
                                 </Row>
                                 <Row>
@@ -511,6 +503,15 @@ const AuctioneerFormWizard = ({auctioneerId}) => {
                                       </Row>
                                     
                                     </Col>
+                                </Row>
+                                <Row>
+                                  <Col md={12}>
+                                    <InputText
+                                    name="Address"
+                                    validation={auctionHouseForm.getFieldProps('address')}
+                                    metaProps={auctionHouseForm.getFieldMeta('address')}
+                                    />
+                                  </Col>
                                 </Row>
                               
                               

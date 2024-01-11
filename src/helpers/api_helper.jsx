@@ -45,37 +45,37 @@ const refreshAccessToken = async () => {
 };
 
 axiosApi.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      const { config, response: { status } } = error;
-  
-      if (status === 401 && !config._retry) {
-        config._retry = true;
-  
-        try {
-          // Refresh the access token
-          const newAccessToken = await refreshAccessToken();
-  
-          // Reset the retry flag
-          config._retry = false;
-  
-          // Update the Authorization header with the new token
-          config.headers.Authorization = newAccessToken;
-  
-          // Retry the original request with the new token
-          return axios(config);
-        } catch (refreshError) {
-          // Handle the refresh error, e.g., redirect to login
-          console.error('Error refreshing token:', refreshError);
-  
-          // You might want to clear tokens or redirect to the login page
-          throw refreshError;
-        }
+  (response) => response,
+  async (error) => {
+    const { config, response: { status } } = error;
+
+    if (status === 401 && !config._retry) {
+      config._retry = true;
+
+      try {
+        // Refresh the access token
+        const newAccessToken = await refreshAccessToken();
+        console.log(newAccessToken,"newtoken")
+        // Reset the retry flag
+        config._retry = false;
+
+        // Update the Authorization header with the new token for the original request
+        config.headers.Authorization = newAccessToken;
+
+        // Retry the original request with the new token
+        return axiosApi(config);
+      } catch (refreshError) {
+        // Handle the refresh error, e.g., redirect to login
+        console.error('Error refreshing token:', refreshError);
+
+        // You might want to clear tokens or redirect to the login page
+        throw refreshError;
       }
-  
-      return Promise.reject(error);
     }
-  );
+
+    return Promise.reject(error);
+  }
+);
 const headers  = {
     'accept': 'application/json',
     'x-lang': 'en'

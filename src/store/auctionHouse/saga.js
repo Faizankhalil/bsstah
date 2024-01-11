@@ -10,7 +10,7 @@ import {
  } from "./actions";
 import { fetchAuctionHouse } from "../../helpers/helperFunction/auctionHouseApi";
 import {showToast} from "../toast/action";
-import { getAuctionHouseDetail } from "../../helpers/fakebackend_helper";
+import { getAuctionHouseDetail } from "../../helpers/backend_helper";
 import { getAuctioneerDetailsFail } from "../auctioneer/actions";
 
 

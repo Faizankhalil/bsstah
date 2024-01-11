@@ -2,7 +2,7 @@ import {put, call, takeEvery} from "redux-saga/effects";
 import { UPLOAD_FILE_REQUEST } from "./actionType";
 import { uploadFileSuccess,uploadFileFail } from "./action";
 import {showToast} from "../toast/action";
-import { uploadfile } from "../../helpers/fakebackend_helper";
+import { uploadfile } from "../../helpers/backend_helper";
 
 function* onUploadFile(action){
 try{

@@ -50,8 +50,12 @@ import AuctioneerReducer from "./auctioneer/reducer";
 
 //auction House
 import auctionHouseReducer from "./auctionHouse/reducer";
+
 //upload file
-import fileReducer from "./fileUpload/reducer"
+import fileReducer from "./fileUpload/reducer";
+
+//bidder
+import BidderReducer from "./bidder/reducer";
 
 const rootReducer = combineReducers({
   // public
@@ -74,7 +78,8 @@ const rootReducer = combineReducers({
   CategoriesReducer,
   AuctioneerReducer,
   auctionHouseReducer,
-  fileReducer
+  fileReducer,
+  BidderReducer
 })
 
 export default rootReducer

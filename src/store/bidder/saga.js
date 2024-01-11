@@ -1,83 +1,84 @@
 import {put, call, takeEvery} from "redux-saga/effects";
 import {
-    GET_AUCTIONEERS_REQUESTED,
-    GET_AUCTIONEER_DETAILS_REQUESTED,
-    ADD_AUCTIONEER_REQUESTED,
-    UPDATE_AUCTIONEER_REQUESTED,
-    DELETE_AUCTIONEER_REQUESTED,
-    SEARCH_AUCTIONEER_REQUESTED
+    GET_BIDDER_REQUESTED,
+    GET_BIDDER_DETAILS_REQUESTED,
+    ADD_BIDDER_REQUESTED,
+    UPDATE_BIDDER_REQUESTED,
+    DELETE_BIDDER_REQUESTED,
+    SEARCH_BIDDER_REQUESTED
 } from "./actionType";
 import {
-    getAuctioneersSuccess,
-    getAuctioneersFail,
-    getAuctioneerDetailsSuccess,
-    getAuctioneerDetailsFail,
-    createAuctioneerSuccess,
-    createAuctioneerFail,
-    updateAuctioneerSuccess,
-    updateAuctioneerFail,
-    serachAuctioneersSuccess,
-    searchAuctioneersFail
+    getBiddersSuccess,
+    getBiddersFail,
+    getBidderDetailsSuccess,
+    getBidderDetailsFail,
+    createBidderSuccess,
+    createBidderFail,
+    updateBidderSuccess,
+    updateBidderFail,
+    serachBiddersSuccess,
+    searchBiddersFail
 } from "./actions"
 import {showToast} from "../toast/action";
 
 import { fetchAuctioneers,fetchAuctioneer,createAuctioneer,updateAuctioneer,serachhAuctioneers } from "../../helpers/helperFunction/auctioneerApi";
+import { getBiddersList } from "../../helpers/backend_helper";
 
-function* onGetAuctioneers(action){
+function* onGetBidders(action){
     try{
         const {limit, offset} = action.payload;
         const all = limit * offset
-        const response = yield call(fetchAuctioneers,{
+        const response = yield call(getBiddersList,{
             limit,
             offset:all
         })
-        yield put(getAuctioneersSuccess(response))
+        yield put(getBiddersSuccess(response))
     }
     catch (error){
-        yield put(getAuctioneersFail(error))
+        yield put(getBiddersFail(error))
     }
 
 }
 
-function* onGetAuctioneerDetails(action){
+function* onGetBidderDetails(action){
     console.log(action.payload,"action")
     try{
         const response = yield call(fetchAuctioneer, action.payload)
-        yield put(getAuctioneerDetailsSuccess(response))
+        yield put(getBidderDetailsSuccess(response))
     }
     catch (error){
-        yield put(getAuctioneerDetailsFail(error))
+        yield put(getBidderDetailsFail(error))
     }
 
 }
 
-function* onCreateAuctioneer(action){
+function* onCreateBidder(action){
     try{
          const response = yield call(createAuctioneer,action.payload )
-        yield put(createAuctioneerSuccess(response))
+        yield put(createBidderSuccess(response))
         console.log(response,"from create auctioneer")
         const message = response.message || "Auctioneer successfully created"
         yield put(showToast(message,"success"))
        
     }
     catch(error){
-        yield put(createAuctioneerFail(error))
+        yield put(createBidderFail(error))
         const errorMessage = error?.message || "Failed to create Auctioneer"
         yield put(showToast(errorMessage,"error"))
       
     }
 }
 
-function* onUpdateAuctioneer(action){
+function* onUpdateBidder(action){
     try{
         const response = yield call(updateAuctioneer,action.payload )
-        yield put(updateAuctioneerSuccess(response))
+        yield put(updateBidderSuccess(response))
         console.log(response,"from create auctioneer")
         const message = response.message || "Auctioneer successfully updated"
         yield put(showToast(message,"success"))
     }
     catch(error){
-        yield put(updateAuctioneerFail(error))
+        yield put(updateBidderFail(error))
         const errorMessage = error?.message || "Failed to update Auctioneer"
         yield put(showToast(errorMessage,"error"))
     }
@@ -85,24 +86,24 @@ function* onUpdateAuctioneer(action){
 }
 
 //search 
-function* onSearchAuctioneer(action){
+function* onSearchBidder(action){
     try{
         const response = yield call(serachhAuctioneers,action.payload )
        console.log(action.payload,"payload")
        console.log(response,"response")
-       yield put(serachAuctioneersSuccess(response))
+       yield put(serachBiddersSuccess(response))
     }
     catch(error){
-        yield put(searchAuctioneersFail(error))
+        yield put(searchBiddersFail(error))
     }
 }
 
-function* auctioneerSaga(){
-    yield takeEvery(GET_AUCTIONEERS_REQUESTED,onGetAuctioneers)
-    yield takeEvery(GET_AUCTIONEER_DETAILS_REQUESTED,onGetAuctioneerDetails)
-    yield takeEvery(ADD_AUCTIONEER_REQUESTED,onCreateAuctioneer),
-    yield takeEvery(UPDATE_AUCTIONEER_REQUESTED,onUpdateAuctioneer),
-    yield takeEvery(SEARCH_AUCTIONEER_REQUESTED,onSearchAuctioneer)
+function* bidderSaga(){
+    yield takeEvery(GET_BIDDER_REQUESTED,onGetBidders)
+    yield takeEvery(GET_BIDDER_DETAILS_REQUESTED,onGetBidderDetails)
+    yield takeEvery(ADD_BIDDER_REQUESTED,onCreateBidder),
+    yield takeEvery(UPDATE_BIDDER_REQUESTED,onUpdateBidder),
+    yield takeEvery(SEARCH_BIDDER_REQUESTED,onSearchBidder)
 }
 
-export default auctioneerSaga
+export default bidderSaga

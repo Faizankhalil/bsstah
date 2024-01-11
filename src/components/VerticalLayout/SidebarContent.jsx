@@ -113,7 +113,7 @@ const SidebarContent = props => {
                     </Link>
                 </li>
                 <li>
-                  <Link to="/#"><i className="bx bx-user-circle"></i>{props.t("Bider")} </Link>
+                  <Link to="/bidder-list"><i className="bx bx-user-circle"></i>{props.t("Bider")} </Link>
                 </li>
                 <li>
                   <Link to="/auctioneer-list"><i className="bx bx-store"></i>{props.t("Auctioneer")} </Link>

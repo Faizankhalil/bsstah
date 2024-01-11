@@ -21,7 +21,8 @@ import categoriesSaga from "./configuration/saga";
 import auctioneerSaga from "./auctioneer/saga";
 import {watchShowToast} from "./toast/saga";
 import auctionHouseSaga from "./auctionHouse/saga";
-import uploadSaga from "./fileUpload/sagas"
+import uploadSaga from "./fileUpload/sagas";
+import bidderSaga from "./bidder/saga"
 
 export default function* rootSaga() {
   yield all([
@@ -46,6 +47,7 @@ export default function* rootSaga() {
     fork(auctioneerSaga),
     fork(watchShowToast),
     fork(auctionHouseSaga),
-    fork(uploadSaga)
+    fork(uploadSaga),
+    fork(bidderSaga)
   ])
 }

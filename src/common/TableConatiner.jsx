@@ -42,10 +42,8 @@ import { useSelector, useDispatch } from "react-redux";
         state,
         previousPage,
         setPageSize,
-        state: { pageIndex, pageSize },
-        handleRowClick = (recordId) => {
-           getAuctionnerID(recordId)// Call the provided function with the selected auctioneer ID
-          }
+        state: { pageIndex, pageSize }
+       
       } = useTable(
         {
           columns,
@@ -84,7 +82,10 @@ import { useSelector, useDispatch } from "react-redux";
     const page = event.target.value ? Number(event.target.value) - 1 : 0;
     gotoPage(page);
   };
- 
+  const handleRowClick = (recordId) => {
+    console.log(recordId,"recordId")
+    getAuctionnerID(recordId)// Call the provided function with the selected auctioneer ID
+   }
 
  useEffect(() => {
   console.log("Updated pageIndex:", pageIndex);

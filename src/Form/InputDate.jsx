@@ -1,15 +1,14 @@
 import React from 'react';
 import { FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 
-const InputPassword = (props) => {
+const InputDate = (props) => {
   return (
     <>
       <FormGroup className="mb-3">
-        <Label hidden={props.hidden}>{props.name}</Label>
+        <Label>{props.name}</Label>
         <Input
-          type="password"
+          type="date"
           disabled={props.disabled}
-          hidden={props.hidden}
           {...props.validation}
           invalid={props.metaProps.touched && !!props.metaProps.error} // Mark the input as invalid when there's an error
         />
@@ -21,4 +20,4 @@ const InputPassword = (props) => {
   );
 };
 
-export default InputPassword;
+export default InputDate;
